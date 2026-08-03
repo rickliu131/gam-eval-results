@@ -1,1 +1,10 @@
-{"rounds": []}
+{
+ "rounds": [
+  {
+   "round": "r8-kb3-full",
+   "file": "r8-kb3-full.json",
+   "generated_at": "2026-08-03T08:23:38.149290+00:00",
+   "items": 62
+  }
+ ]
+}
