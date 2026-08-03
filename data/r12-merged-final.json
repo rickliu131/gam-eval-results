@@ -1,6 +1,6 @@
 {
  "round": "r12-merged-final",
- "generated_at": "2026-08-03T13:11:06.546163+00:00",
+ "generated_at": "2026-08-03T16:21:32.854712+00:00",
  "metrics": {
   "overall": {
    "cases_tested": 62,
@@ -127,32 +127,44 @@
  },
  "ablation_metrics": {
   "overall": {
-   "friction_recall": 0.6296,
+   "friction_recall": 0.4359,
    "precision": 0.1082,
-   "barriers_per_case": 9.9,
-   "extra_frictions_per_case": 8.85,
-   "cases_judged": 27
+   "barriers_per_case": 7.1,
+   "extra_frictions_per_case": 6.29,
+   "cases_counted": 38,
+   "cases_audited": 27
   },
   "blind": {
-   "friction_recall": 0.9167,
+   "friction_recall": 0.8462,
    "precision": 0.1022,
-   "barriers_per_case": 15.5,
-   "extra_frictions_per_case": 13.92,
-   "cases_judged": 12
+   "barriers_per_case": 14.3,
+   "extra_frictions_per_case": 12.85,
+   "cases_counted": 13,
+   "cases_audited": 12
   },
   "low_vision": {
    "friction_recall": 0.3333,
    "precision": 0.0533,
    "barriers_per_case": 6.2,
    "extra_frictions_per_case": 5.92,
-   "cases_judged": 12
+   "cases_counted": 12,
+   "cases_audited": 12
   },
   "dhh": {
-   "friction_recall": 0.6667,
+   "friction_recall": 0.25,
    "precision": 0.8571,
-   "barriers_per_case": 2.3,
-   "extra_frictions_per_case": 0.33,
-   "cases_judged": 3
+   "barriers_per_case": 0.9,
+   "extra_frictions_per_case": 0.12,
+   "cases_counted": 8,
+   "cases_audited": 3
+  },
+  "motor": {
+   "friction_recall": 0.0,
+   "precision": 0.0,
+   "barriers_per_case": 0.0,
+   "extra_frictions_per_case": 0.0,
+   "cases_counted": 5,
+   "cases_audited": 0
   }
  },
  "ground_truth_version": "2026-08-03",

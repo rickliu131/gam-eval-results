@@ -89,17 +89,23 @@ function stats(m, abl) {
     return `<div class="tile"><b>${esc(shown)}</b><span>GAM · ${esc(label)}</span></div>`;
   }).join("") + `<div class="tile"><b>${o.verdict_pass ?? "—"}/${o.cases_tested ?? "—"}</b><span>GAM · cases pass / tested</span></div>`;
   const pg = (m || {}).per_group || {};
+  const GROUP_ORDER = ["blind", "low_vision", "dhh", "motor"];
+  const ordered = obj => GROUP_ORDER.filter(g => obj[g]).map(g => [g, obj[g]])
+    .concat(Object.entries(obj).filter(([g]) => g !== "overall" && !GROUP_ORDER.includes(g)));
   const fmt = (b, k) => RAW_METRICS.has(k) ? (b?.[k] ?? "—") : pct(b?.[k]);
-  const gamRows = Object.entries(pg).map(([g, b]) =>
+  const gamRows = ordered(pg).map(([g, b]) =>
     `<tr><th>GAM · ${esc(g)}</th>` + METRICS.map(([k]) => `<td>${fmt(b, k)}</td>`).join("") + `</tr>`).join("");
   const a = abl || {};
   const ablCells = b =>
-    `<td>${pct(b.friction_recall)}</td><td>${pct(b.precision)}</td><td>${b.extra_frictions_per_case ?? "—"}</td>`;
-  const ablRows = Object.entries(a).filter(([g]) => g !== "overall").map(([g, b]) =>
-    `<tr><th>LLM-only · ${esc(g)}</th>${ablCells(b)}<td colspan="4">n/a — ${b.barriers_per_case ?? "?"} barriers listed /case; ${b.cases_judged} web cases</td></tr>`).join("");
-  const ablOverall = a.overall ? `<tr><th><b>LLM-only · overall</b></th>${ablCells(a.overall)}<td colspan="4">static page audit (Opus 5, HTML + a11y tree + standards; no interaction data); ${a.overall.barriers_per_case ?? "?"} barriers /case over ${a.overall.cases_judged} web cases</td></tr>` : "";
+    `<td>${pct(b.friction_recall)}</td><td>${pct(b.precision)}</td><td>${b.extra_frictions_per_case ?? "—"}</td><td>n/a</td><td>n/a</td><td>n/a</td><td>n/a</td>`;
+  const ablOverall = a.overall ? `<tr><th><b>LLM-only · overall</b></th>${ablCells(a.overall)}</tr>` : "";
+  const ablRows = ordered(a).map(([g, b]) =>
+    `<tr><th>LLM-only · ${esc(g)}</th>${ablCells(b)}</tr>`).join("");
+  const ablNote = a.overall
+    ? `<div class="meta" style="margin-top:6px">LLM-only baseline = static page audit (Opus 5, page HTML + accessibility tree + standards; no interaction data). Non-web / uncaptured cases count as 0 surfaced. ${a.overall.barriers_per_case ?? "?"} barriers listed /case; ${a.overall.cases_audited ?? "?"} of ${a.overall.cases_counted ?? "?"} cases auditable.</div>`
+    : "";
   document.getElementById("groupstats").innerHTML = (gamRows || ablOverall)
-    ? `<table><tr><th></th>${METRICS.map(([,l])=>`<th>${esc(l)}</th>`).join("")}</tr>${gamRows}${ablOverall}${ablRows}</table>` : "";
+    ? `<table><tr><th></th>${METRICS.map(([,l])=>`<th>${esc(l)}</th>`).join("")}</tr>${gamRows}${ablOverall}${ablRows}</table>${ablNote}` : "";
 }
 
 function frictionGrid(it) {
@@ -238,7 +244,10 @@ async function loadRound(file) {
     (groups[g] = groups[g] || {});
     (groups[g][it.category || "?"] = groups[g][it.category || "?"] || []).push(it);
   });
-  document.getElementById("main").innerHTML = Object.entries(groups).map(([g, cats]) =>
+  const GROUP_ORDER = ["blind", "low_vision", "dhh", "motor"];
+  const orderedGroups = GROUP_ORDER.filter(g => groups[g]).map(g => [g, groups[g]])
+    .concat(Object.entries(groups).filter(([g]) => !GROUP_ORDER.includes(g)));
+  document.getElementById("main").innerHTML = orderedGroups.map(([g, cats]) =>
     `<h2 class="group">${esc(g.replace("_"," "))}</h2>` +
     Object.entries(cats).map(([cat, items]) =>
       `<h3 class="cat">${esc(cat)}</h3>` + items.map(itemHtml).join("")).join("")

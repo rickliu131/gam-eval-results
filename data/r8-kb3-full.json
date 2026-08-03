@@ -1,6 +1,6 @@
 {
  "round": "r8-kb3-full",
- "generated_at": "2026-08-03T08:47:34.307619+00:00",
+ "generated_at": "2026-08-03T16:21:32.917926+00:00",
  "metrics": {
   "overall": {
    "cases_tested": 62,
@@ -127,32 +127,44 @@
  },
  "ablation_metrics": {
   "overall": {
-   "friction_recall": 0.6296,
+   "friction_recall": 0.4359,
    "precision": 0.1082,
-   "barriers_per_case": 9.9,
-   "extra_frictions_per_case": 8.85,
-   "cases_judged": 27
+   "barriers_per_case": 7.1,
+   "extra_frictions_per_case": 6.29,
+   "cases_counted": 38,
+   "cases_audited": 27
   },
   "blind": {
-   "friction_recall": 0.9167,
+   "friction_recall": 0.8462,
    "precision": 0.1022,
-   "barriers_per_case": 15.5,
-   "extra_frictions_per_case": 13.92,
-   "cases_judged": 12
+   "barriers_per_case": 14.3,
+   "extra_frictions_per_case": 12.85,
+   "cases_counted": 13,
+   "cases_audited": 12
   },
   "low_vision": {
    "friction_recall": 0.3333,
    "precision": 0.0533,
    "barriers_per_case": 6.2,
    "extra_frictions_per_case": 5.92,
-   "cases_judged": 12
+   "cases_counted": 12,
+   "cases_audited": 12
   },
   "dhh": {
-   "friction_recall": 0.6667,
+   "friction_recall": 0.25,
    "precision": 0.8571,
-   "barriers_per_case": 2.3,
-   "extra_frictions_per_case": 0.33,
-   "cases_judged": 3
+   "barriers_per_case": 0.9,
+   "extra_frictions_per_case": 0.12,
+   "cases_counted": 8,
+   "cases_audited": 3
+  },
+  "motor": {
+   "friction_recall": 0.0,
+   "precision": 0.0,
+   "barriers_per_case": 0.0,
+   "extra_frictions_per_case": 0.0,
+   "cases_counted": 5,
+   "cases_audited": 0
   }
  },
  "ground_truth_version": "2026-08-03",
@@ -638,21 +650,21 @@
        "6bf79c83-6179-428c-b227-1b7657734c3e"
       ],
       "inferred_severity": 2,
-      "note": "Correctly identified that the skip link references a non-existent '#main-content' target ID, preventing focus from reaching the main content."
+      "note": "GAM surfaced the same core failure: the 'Skip to main content' link's '#main-content' target is missing, activation does not shift focus, and the user remains at the top of the page. It did not mention the announced role being wrong, but the functional consequence is captured."
      }
     ],
     "mode_expected": "repair",
     "mode_inferred": "repair",
     "intervention_content_ok": true,
-    "intervention_note": "The proposed repair correctly targets the missing target container, assigning id='main-content' and tabindex='-1' along with focus handling.",
+    "intervention_note": "GAM's repair injects the missing id='main-content' target on the main content wrapper, adds tabindex='-1', and programmatically shifts focus on activation — a sensible, safe change that satisfies the expected skip-link-target repair.",
     "report_expected": true,
     "report_ok": true,
-    "report_note": "The generated report item clearly describes the skip link failure and provides accurate developer mitigations.",
+    "report_note": "GAM's report describes the missing '#main-content' element, the observed focus failure, and provides a concrete developer-facing mitigation, including regression checking for fragment links.",
     "pattern_ok": true,
-    "pattern_note": "Correctly identified VoiceOver usage via Command-F5 for screen reader navigation.",
+    "pattern_note": "Interaction patterns explicitly record VoiceOver enabled via Command-F5, matching the expected nonvisual/VoiceOver access context.",
     "extra_inferred_frictions": [],
     "verdict": "pass",
-    "rationale": "GAM accurately detected the broken skip link friction, produced a valid DOM repair, generated an informative report, and correctly identified the VoiceOver interaction pattern."
+    "rationale": "The single ground-truth friction for blind:gov-za was surfaced by GAM with an equivalent description and a correct repair intervention. The report is present and useful, and the interaction pattern correctly reflects VoiceOver usage."
    },
    "ablation": {
     "case_id": "blind:gov-za",
@@ -854,21 +866,21 @@
        "7a54b18f-b080-4f87-ad2c-a9adf90ca61a"
       ],
       "inferred_severity": 2,
-      "note": "GAM correctly identified the broken skip to main content link caused by missing #main-content target."
+      "note": "Inferred friction describes the broken 'Skip to main content' link and missing #main-content target, matching the ground-truth friction of a nonfunctional skip link."
      }
     ],
     "mode_expected": "repair",
     "mode_inferred": "repair",
     "intervention_content_ok": true,
-    "intervention_note": "The repair script appropriately assigns the target ID and tabindex and moves VoiceOver focus to the main content container.",
+    "intervention_note": "The repair targets the skip link and main layout section, adding id='main-content', tabindex='-1', and a focus() handler, which addresses the missing/unfocusable target and restores focus movement.",
     "report_expected": true,
     "report_ok": true,
-    "report_note": "The report section clearly explains the issue with missing target fragment and provides appropriate technical mitigations.",
+    "report_note": "GAM produced a developer-facing report item identifying the missing #main-content target and prescribing a focusable target plus focus() handler and regression check.",
     "pattern_ok": true,
-    "pattern_note": "VoiceOver rotor usage pattern was correctly recognized.",
+    "pattern_note": "Interaction pattern explicitly identifies VoiceOver Rotor link navigation, matching the blind/VoiceOver access context.",
     "extra_inferred_frictions": [],
     "verdict": "pass",
-    "rationale": "GAM accurately identified the broken skip link friction, supplied an effective repair plan to fix the target container focus, generated a helpful developer report, and detected VoiceOver interaction patterns."
+    "rationale": "The single ground-truth friction is surfaced with an equivalent description and even a slightly higher severity. The repair mode, intervention content, and developer report all align with the expected repair and report, and the voiceover interaction pattern is correctly identified."
    },
    "ablation": {
     "case_id": "blind:gov-za",
@@ -1070,21 +1082,21 @@
        "ae4485b7-00c7-4888-8260-3d9c7168ff7d"
       ],
       "inferred_severity": 3,
-      "note": "GAM correctly identified that the availability grid slots lack ARIA semantics and focusability, preventing VoiceOver users from interacting with them."
+      "note": "GAM described the same unsemantic, non-focusable slot grid and the resulting inability of VoiceOver/keyboard to select availability slots; severity 3 matches ground truth."
      }
     ],
     "mode_expected": "repair",
     "mode_inferred": "repair",
     "intervention_content_ok": true,
-    "intervention_note": "The repair injection correctly targets the grid slot elements, assigning focusability, button role, dynamic aria-labels combining date and time, and keyboard navigation support.",
+    "intervention_note": "Repair targets the correct slot elements and adds tabindex, roles, accessible names, and Enter/Space activation — a sensible and safe change that makes slots operable, though it is a simplified alternative to a full grid/row/gridcell + arrow-key implementation.",
     "report_expected": true,
     "report_ok": true,
-    "report_note": "The developer report accurately explains the failure and provides actionable recommendations to fix grid slot semantics and keyboard controls.",
+    "report_note": "GAM produced a developer-facing report with a concrete mitigation covering roles, accessible names, keyboard handlers, selection state, and focus indicators.",
     "pattern_ok": true,
-    "pattern_note": "VoiceOver screen reader usage in Safari was correctly captured.",
+    "pattern_note": "GAM's interaction pattern explicitly identifies VoiceOver screen reader navigation in Safari, matching the nonvisual low-vision/blind access context.",
     "extra_inferred_frictions": [],
     "verdict": "pass",
-    "rationale": "GAM detected the core accessibility barrier on When2Meet, generated a working repair, and produced an detailed report adhering to all requirements."
+    "rationale": "The sole recorded case, When2Meet, had its ground-truth friction surfaced at the correct severity, the expected repair mode was produced, a useful developer report was included, and the VoiceOver interaction pattern was correctly identified. The intervention omits some refinements like arrow-key roving focus, but it targets the right elements and plausibly restores keyboard/VoiceOver access to slot selection."
    },
    "ablation": {
     "case_id": "blind:when2meet",
@@ -1269,21 +1281,21 @@
        "05b8ed52-39b5-4434-ac23-1b2a582d4abf"
       ],
       "inferred_severity": 3,
-      "note": "The inferred friction accurately identifies that the availability schedule grid cannot be focused, read, or operated via keyboard with VoiceOver due to missing ARIA roles and semantics."
+      "note": "Inferred friction accurately describes the availability grid slots as unlabelled divs with no focusability, semantics, or keyboard operability, matching the ground-truth friction (severity 3)."
      }
     ],
     "mode_expected": "repair",
     "mode_inferred": "repair",
-    "intervention_content_ok": true,
-    "intervention_note": "The repair script injects role, tabindex, dynamic aria-label, and Space/Enter keydown event handlers onto the grid slots.",
+    "intervention_content_ok": false,
+    "intervention_note": "The repair makes the slot divs keyboard-focusable buttons with labels and Space/Enter toggling, which is a sensible partial fix, but it omits the expected grid/row/gridcell semantics, selection state, roving focus, and arrow-key navigation described in the ground-truth intervention.",
     "report_expected": true,
     "report_ok": true,
-    "report_note": "The report provides a thorough explanation of the issue and offers a sound developer mitigation plan.",
+    "report_note": "GAM's report item covers the same failure and gives a solid developer-facing mitigation including interactive roles, tabindex, accessible names, state exposure, keyboard handlers, and grid structure guidance.",
     "pattern_ok": true,
-    "pattern_note": "Interaction patterns correctly capture VoiceOver screen reader activation and VoiceOver Rotor usage.",
+    "pattern_note": "Interaction patterns clearly establish VoiceOver screen reader usage (VO-U Rotor navigation and Command-F5 activation), matching the blind nonvisual access context.",
     "extra_inferred_frictions": [],
-    "verdict": "pass",
-    "rationale": "GAM correctly identified the inaccessible schedule grid friction on When2Meet, generated a working repair script to add focusability and keyboard control, and produced an accurate report item."
+    "verdict": "partial",
+    "rationale": "The core friction was surfaced accurately with matching severity, and the reported developer mitigation is appropriate, but the generated repair intervention only partially implements the expected accessible-grid solution (missing grid semantics, roving focus, and arrow-key navigation), so the case is partial rather than pass."
    },
    "ablation": {
     "case_id": "blind:when2meet",
@@ -1464,21 +1476,21 @@
        "a4603bf1-30bf-402f-b698-59e846f9e2d0"
       ],
       "inferred_severity": 2,
-      "note": "GAM identified generic 'Visit linked content' aria-labels on carousel card controls."
+      "note": "GAM's inferred friction describes the same 'Visit linked content' announcement issue on the Little Leaders gallery/carousel cards, semantically matching the ground-truth ambiguous product-category links."
      }
     ],
     "mode_expected": "repair",
     "mode_inferred": "repair",
     "intervention_content_ok": true,
-    "intervention_note": "Repair script correctly extracts image alt text to update parent container accessible names.",
+    "intervention_note": "GAM's repair plan updates the card/carousel controls to use descriptive accessible names derived from inner image alt text, which would give each product-category card a distinguishing name as the expected repair requires.",
     "report_expected": true,
     "report_ok": true,
-    "report_note": "Report properly explains the aria-label override issue and provides actionable developer remediation.",
+    "report_note": "A report was requested and GAM produced a developer-facing report with a sensible mitigation: give each gallery card a unique descriptive accessible name instead of the shared literal string.",
     "pattern_ok": true,
-    "pattern_note": "Correctly identified VoiceOver screen reader usage for nonvisual sequential keyboard navigation.",
+    "pattern_note": "Session interaction_patterns explicitly identify VoiceOver screen reader use for sequential nonvisual keyboard navigation, matching the expected blind nonvisual access context.",
     "extra_inferred_frictions": [],
     "verdict": "pass",
-    "rationale": "GAM accurately identified the 'Visit linked content' ambiguous label friction on Little Leaders, supplied an effective JS repair script, generated a developer report, and matched the screen reader interaction context."
+    "rationale": "The sole ground-truth friction ('Visit linked content' ambiguous announcements) was surfaced with equivalent semantics, GAM produced a matching repair plus a developer-facing report, and session patterns confirm the expected VoiceOver blind access context. All grading criteria pass."
    },
    "ablation": {
     "case_id": "blind:little-leaders",
@@ -1677,21 +1689,21 @@
        "7b48dfdc-50bb-420d-a572-a7d31a5cf7da"
       ],
       "inferred_severity": 2,
-      "note": "GAM correctly identified that controls are announced as generic 'Visit linked content' due to explicit ARIA labels overriding child alt text."
+      "note": "Inferred friction describes the same generic 'Visit linked content' spoken name problem for carousel/links, matching the ground-truth friction of indistinguishable product-category links. Severity differs (2 vs 3) but the accessibility failure and consequence are equivalent."
      }
     ],
     "mode_expected": "repair",
     "mode_inferred": "repair",
     "intervention_content_ok": true,
-    "intervention_note": "The proposed repair plan updates or removes generic ARIA labels to restore descriptive accessible names based on image alt text.",
+    "intervention_note": "The produced repair updates the carousel button ARIA labels to use descriptive child image alt text instead of the generic 'Visit linked content' label, which would give each destination a distinct accessible name as the ground truth requires.",
     "report_expected": true,
     "report_ok": true,
-    "report_note": "A developer report item was provided with an actionable mitigation strategy for accessible names.",
+    "report_note": "A report finding with a concrete developer-facing mitigation (unique descriptive accessible names, either removing or enriching the aria-label) was produced and covers the expected friction.",
     "pattern_ok": true,
-    "pattern_note": "VoiceOver keyboard and rotor interaction pattern was accurately identified.",
+    "pattern_note": "The interaction pattern explicitly identifies VoiceOver usage (Cmd+F5, rotor navigation), matching the blind/VoiceOver access context of the ground truth.",
     "extra_inferred_frictions": [],
     "verdict": "pass",
-    "rationale": "GAM correctly identified the ambiguous 'Visit linked content' control labels on Little Leaders, provided a valid repair plan to populate unique accessible names, and generated a comprehensive developer report."
+    "rationale": "The only ground-truth friction was fully surfaced with an equivalent repair and report; the VoiceOver interaction pattern was correctly identified. No extra inferred frictions were present."
    },
    "ablation": {
     "case_id": "blind:little-leaders",
@@ -2353,21 +2365,21 @@
        "63cc7888-2586-4d4d-a50a-d4caad922e68"
       ],
       "inferred_severity": 2,
-      "note": "Accurately detected the generic alt text issue on Chart 1 and Chart 2 images in the article."
+      "note": "GAM describes the same chart alt-text failure: VoiceOver announces only 'Chart 1, image'/'Chart 2, image', raw axis ticks are exposed, and the trend/conclusion is unavailable."
      }
     ],
     "mode_expected": "repair",
     "mode_inferred": "repair",
     "intervention_content_ok": true,
-    "intervention_note": "Proposed a valid DOM repair targeting the img elements, assigning descriptive alt text and aria-describedby associations.",
+    "intervention_note": "GAM's repair injects descriptive alt text into the Chart 1 and Chart 2 images and associates them with adjacent explanatory paragraphs via aria-describedby, matching the expected descriptive-alt-text repair.",
     "report_expected": true,
     "report_ok": true,
-    "report_note": "Comprehensive developer mitigation report explaining how to replace generic alt values and associate explanatory text.",
+    "report_note": "GAM produced a report finding with a developer-facing mitigation (replace generic alt values, associate explanation via aria-describedby, hide decorative chart children), covering the expected friction.",
     "pattern_ok": true,
-    "pattern_note": "Correctly detected VoiceOver shortcut usage and sequential VO navigation.",
+    "pattern_note": "Session interaction patterns clearly establish nonvisual VoiceOver usage (sequential Control-Option-Right-Arrow navigation and Command-F5 activation).",
     "extra_inferred_frictions": [],
     "verdict": "pass",
-    "rationale": "GAM correctly identified the generic alt text friction on Carnegie Investment Counsel's market charts, generated an effective DOM repair, and provided accurate report documentation under VoiceOver interaction context."
+    "rationale": "The only ground-truth friction for the Carnegie case was fully surfaced by GAM (generic chart alt text hiding the chart's substantive message), and the repair mode, intervention content, and report are all correct and faithful to the expected repair. Interaction patterns confirm the VoiceOver context."
    },
    "ablation": {
     "case_id": "blind:carnegie",
@@ -2576,21 +2588,21 @@
        "929e1be7-9717-4fe0-9afe-13c17a2edde7"
       ],
       "inferred_severity": 2,
-      "note": "Friction accurately identified the non-descriptive alt text ('Chart 1', 'Chart 2') on financial chart images and the reliance on unstructured image recognition."
+      "note": "GAM's inferred friction is semantically equivalent: it describes generic alt text ('Chart 1', 'Chart 2') on data charts, forcing VoiceOver image recognition/OCR workarounds. Severity scored 2 in GAM vs 3 in ground truth."
      }
     ],
     "mode_expected": "repair",
     "mode_inferred": "none",
-    "intervention_content_ok": null,
-    "intervention_note": "GAM produced only a report intervention object under the friction and failed to output a repair intervention despite repair mode being requested.",
+    "intervention_content_ok": false,
+    "intervention_note": "The only intervention produced was a developer-facing report; no repair or recommendation was generated. The expected repair (injecting descriptive alt text) is missing.",
     "report_expected": true,
     "report_ok": true,
-    "report_note": "The developer report item correctly describes the issue and provides actionable mitigation guidance to replace generic alt text with structured data summaries or accessible tables.",
+    "report_note": "The generated report clearly covers the generic alt-text friction and provides a sensible mitigation: replace generic alt with meaningful descriptions or programmatically associate a data table/long description.",
     "pattern_ok": true,
-    "pattern_note": "Interaction patterns correctly document VoiceOver screen reader usage and key navigation shortcuts.",
+    "pattern_note": "Interaction patterns clearly establish nonvisual VoiceOver usage (Command-F5 activation, Control-Option-Right Arrow navigation, Control-Option-Shift-L image recognition).",
     "extra_inferred_frictions": [],
     "verdict": "partial",
-    "rationale": "GAM correctly surfaced the accessibility friction regarding chart alt text and provided a thorough developer report item. However, it failed to generate the expected repair intervention."
+    "rationale": "The ground-truth friction was surfaced accurately and the report is strong, but GAM produced no repair/recommendation intervention for the expected 'repair' mode, so the intervention grade fails. Thus the case is only partially satisfied."
    },
    "ablation": {
     "case_id": "blind:carnegie",
@@ -2795,21 +2807,21 @@
        "9a9160fe-72ba-47ed-95d8-de32e271ed70"
       ],
       "inferred_severity": 2,
-      "note": "GAM correctly identified that the chart images carry generic 'Chart 1' and 'Chart 2' labels lacking descriptive text alternatives."
+      "note": "GAM surfaced the same core friction: chart images announced only as 'Chart 1/Chart 2' with no accessible data, and in-image VoiceOver interaction yields no content."
      }
     ],
     "mode_expected": "repair",
     "mode_inferred": "none",
-    "intervention_content_ok": null,
-    "intervention_note": "No repair or recommendation intervention was generated, only a report intervention.",
+    "intervention_content_ok": false,
+    "intervention_note": "GAM produced only a report intervention; no repair or recommendation was emitted, so the expected descriptive alt-text repair was not performed.",
     "report_expected": true,
     "report_ok": true,
-    "report_note": "The report item accurately describes the problem and recommends replacing generic alt text with concise summaries and adding long descriptions where necessary.",
+    "report_note": "GAM's report finding covers the generic alt text on both charts and provides a sensible developer-facing mitigation (replace alt text with a conclusion-bearing description and associate a fuller equivalent).",
     "pattern_ok": true,
-    "pattern_note": "Interaction patterns correctly capture VoiceOver usage and Rotor navigation.",
+    "pattern_note": "Session interaction patterns identify VoiceOver Rotor usage and VoiceOver toggled via Command-F5, matching the blind/VoiceOver access context.",
     "extra_inferred_frictions": [],
     "verdict": "partial",
-    "rationale": "GAM successfully detected the inaccessible chart alt text and provided a valid developer report mitigation. However, it failed to produce a code repair intervention despite repair mode being requested."
+    "rationale": "The ground-truth friction was surfaced with accurate detail, and the expected report was produced with a sound mitigation. However, the expected intervention mode was repair, and GAM did not produce any repair or recommendation (only a report), so the intervention grade fails."
    },
    "ablation": {
     "case_id": "blind:carnegie",
@@ -3005,21 +3017,21 @@
        "e04e9a16-facf-4850-bb27-58694945fe99"
       ],
       "inferred_severity": 3,
-      "note": "Correctly identified that the visual image CAPTCHA lacks a nonvisual alternative and cannot be completed with VoiceOver."
+      "note": "GAM's inferred friction describes the same core failure: the CAPTCHA is a visual image-click challenge with no nonvisual alternative, VoiceOver receives no coordinate/text path, and activations produce no response."
      }
     ],
     "mode_expected": "none",
     "mode_inferred": "none",
     "intervention_content_ok": null,
-    "intervention_note": "Expected mode is 'none' and no repair or recommendation interventions were produced, matching expectations.",
+    "intervention_note": "No repair or recommendation was expected or produced; GAM only emitted a report-type finding, which does not count as an intervention mode.",
     "report_expected": true,
     "report_ok": true,
-    "report_note": "Report correctly describes the CAPTCHA accessibility barrier and suggests developer mitigations such as accessible alternative challenges.",
+    "report_note": "GAM's report finding covers the expected friction and provides a sensible developer-facing mitigation: provide a non-visual CAPTCHA alternative, expose focusable named targets, and announce activation results via live regions.",
     "pattern_ok": true,
-    "pattern_note": "Correctly recognized VoiceOver screen reader usage context.",
+    "pattern_note": "Session interaction pattern explicitly identifies VoiceOver screen reader navigation, matching the expected nonvisual blind access context.",
     "extra_inferred_frictions": [],
     "verdict": "pass",
-    "rationale": "GAM accurately identified the inaccessible image CAPTCHA for VoiceOver users, generated an appropriate developer report, and correctly refrained from outputting repair or recommendation interventions."
+    "rationale": "The single ground-truth friction for the CAPTCHA case was surfaced by GAM with equivalent content and severity 3; the expected mode is 'none' and GAM produced only a report, matching expectations. The report is present and actionable, and the interaction pattern correctly identifies VoiceOver use."
    },
    "ablation": {
     "case_id": "blind:captcha",
@@ -3223,21 +3235,21 @@
        "dfba57e5-6147-4205-95f5-5fe1ed560b63"
       ],
       "inferred_severity": 2,
-      "note": "GAM correctly identified that interacting with the hero image produces an empty content announcement in VoiceOver."
+      "note": "GAM's inferred friction describes the same 'Content is empty' announcement on the hero image, matching GT's friction about event-space images lacking useful descriptions."
      }
     ],
     "mode_expected": "recommendation",
     "mode_inferred": "recommendation",
     "intervention_content_ok": true,
-    "intervention_note": "GAM suggested using VoiceOver Recognition / image descriptions (VO-Shift-L or System Settings), matching the expected recommendation.",
+    "intervention_note": "GAM recommends enabling VoiceOver Image Descriptions (VoiceOver Recognition) and using VO-Shift-L to hear a description, which plausibly achieves the GT recommendation.",
     "report_expected": true,
     "report_ok": true,
-    "report_note": "GAM generated a complete report finding explaining the missing text alternative and offering developer mitigations.",
+    "report_note": "GAM produced a completed report item with a sensible developer-facing mitigation: provide an author-supplied text alternative or mark decorative images so VoiceOver does not present an empty interactable container.",
     "pattern_ok": true,
-    "pattern_note": "Interaction patterns correctly capture nonvisual VoiceOver speech and Rotor navigation.",
+    "pattern_note": "Interaction patterns clearly establish VoiceOver Rotor heading navigation and nonvisual speech navigation, matching the GT blind/VoiceOver access context.",
     "extra_inferred_frictions": [],
     "verdict": "pass",
-    "rationale": "GAM successfully identified the missing text alternative friction on the Ann Arbor Art Center event spaces page. It generated an appropriate VoiceOver image description recommendation as well as a developer report mitigation."
+    "rationale": "The single GT friction (empty-content image announcement) was surfaced with matching severity, the recommended intervention was reproduced effectively, the report covered the friction with a good mitigation, and interaction patterns match. No extra frictions were inferred."
    },
    "ablation": {
     "case_id": "blind:aa-arts-center",
@@ -3809,21 +3821,21 @@
        "40b91493-01f1-4a4c-8482-a11274635155"
       ],
       "inferred_severity": 2,
-      "note": "GAM correctly identified that out-of-stock sizes fail to announce their sold-out status to VoiceOver."
+      "note": "GAM identified the same missing sold-out state in VoiceOver announcement of the XS size option, matching the ground-truth friction and severity."
      }
     ],
     "mode_expected": "repair",
     "mode_inferred": "repair",
     "intervention_content_ok": true,
-    "intervention_note": "The repair plan accurately suggests setting aria-disabled='true' and updating accessible labels for sold-out size options.",
+    "intervention_note": "GAM's repair plan sets aria-disabled='true' and appends ' (Sold Out)' to the accessible name, which plausibly achieves the expected stock_state_announcement.",
     "report_expected": true,
     "report_ok": true,
-    "report_note": "The report provides appropriate developer guidance for programmatically exposing sold-out states.",
+    "report_note": "GAM produced a report item describing the missing sold-out state and recommending programmatic exposure of availability, matching the expected report.",
     "pattern_ok": true,
-    "pattern_note": "Interaction pattern correctly identified VoiceOver screen reader usage for nonvisual navigation.",
+    "pattern_note": "Session interaction_patterns explicitly identifies VoiceOver screen reader usage for nonvisual navigation, matching the expected blind/VoiceOver context.",
     "extra_inferred_frictions": [],
     "verdict": "pass",
-    "rationale": "GAM accurately identified the accessibility friction where VoiceOver fails to announce sold-out size states, and provided correct repair and report interventions."
+    "rationale": "The only ground-truth friction for Kill Crew was fully surfaced by GAM with matching severity and a sensible repair plus developer-facing report. Intervention and report grades are correct, and the VoiceOver access context is properly recognized."
    },
    "ablation": {
     "case_id": "blind:kill-crew",
@@ -4021,21 +4033,21 @@
        "add80a2a-08e8-45ad-9497-a9d239ab4e85"
       ],
       "inferred_severity": 2,
-      "note": "Successfully identified that out-of-stock size options lack accessible availability state/announcements."
+      "note": "GAM surfaced the same out-of-stock size availability problem: sold-out size options are announced identically to in-stock ones, causing trial selection of unavailable sizes."
      }
     ],
     "mode_expected": "repair",
     "mode_inferred": "repair",
     "intervention_content_ok": true,
-    "intervention_note": "Repair plan correctly sets aria-disabled and aria-label indicating out of stock on sold-out size radio controls.",
+    "intervention_note": "GAM's proposed repair sets aria-disabled and an accessible name/label indicating 'out of stock' on sold-out size radio inputs, which matches the expected repairing of the stock state in the accessibility tree.",
     "report_expected": true,
     "report_ok": true,
-    "report_note": "Report mitigation comprehensively details programmatically exposing out-of-stock states and updating accessible names/live regions.",
+    "report_note": "GAM produced a developer-facing report finding with a concrete mitigation exposing the out-of-stock state programmatically via aria-disabled, accessible names, and a live region.",
     "pattern_ok": true,
-    "pattern_note": "Interaction patterns correctly capture VoiceOver screen reader usage.",
+    "pattern_note": "The interaction pattern explicitly identifies VoiceOver Rotor usage, establishing the nonvisual VoiceOver access context expected for this case.",
     "extra_inferred_frictions": [],
     "verdict": "pass",
-    "rationale": "GAM accurately detected the friction where out-of-stock size options sound identical to in-stock options, generated a sound code repair, and produced an effective developer mitigation report."
+    "rationale": "The only ground-truth friction for Kill Crew was surfaced by GAM with matching severity and substance, the repair intervention targets the correct controls and implements the expected stock-state exposure, the report covers the issue with a sensible mitigation, and the interaction pattern reflects VoiceOver usage."
    },
    "ablation": {
     "case_id": "blind:kill-crew",
@@ -4241,21 +4253,21 @@
        "732b73c7-c4f5-4112-90e2-0aa777417f0f"
       ],
       "inferred_severity": 2,
-      "note": "GAM correctly identified that visual section titles on Weather.gov lack heading markup, preventing VoiceOver heading navigation."
+      "note": "The inferred friction captures the missing heading markup and the resulting failure of VoiceOver heading navigation/linear traversal, but does not explicitly mention the empty Landmarks rotor."
      }
     ],
     "mode_expected": "repair",
     "mode_inferred": "repair",
-    "intervention_content_ok": true,
-    "intervention_note": "The proposed repair appropriately targets DOM section headers to add aria-level and heading roles without breaking visual styling.",
+    "intervention_content_ok": false,
+    "intervention_note": "The produced repair only adds heading roles to visual section titles; it does not inject the main landmark or labeled navigation landmarks required by the expected semantic page structure repair.",
     "report_expected": true,
-    "report_ok": true,
-    "report_note": "The report effectively describes the barrier and provides clear developer guidance for adding semantic HTML headings or ARIA roles.",
+    "report_ok": false,
+    "report_note": "The report finding provides a sensible mitigation for the headings issue but omits the landmarks problem, so it does not cover the full expected friction.",
     "pattern_ok": true,
-    "pattern_note": "VoiceOver interaction patterns were accurately detected and described.",
+    "pattern_note": "The session's interaction patterns clearly establish VoiceOver screen reader use (Cmd+F5 enable, heading shortcut, VO+Right traversal) and nonvisual operation.",
     "extra_inferred_frictions": [],
-    "verdict": "pass",
-    "rationale": "GAM accurately detected the missing heading structure on Weather.gov during VoiceOver traversal. It generated a valid DOM repair plan and a detailed developer report."
+    "verdict": "partial",
+    "rationale": "The inferred result surfaced the heading-structure half of the ground-truth friction with matching severity, but it missed the empty landmarks aspect, and both the repair and report only address headings, leaving part of the friction unaddressed."
    },
    "ablation": {
     "case_id": "blind:weather-gov",
@@ -4470,21 +4482,21 @@
        "d4f7153a-00ea-4ad6-8026-6e498195d279"
       ],
       "inferred_severity": 2,
-      "note": "Correctly identified missing ARIA landmarks in the VoiceOver rotor."
+      "note": "GAM surfaces the empty Landmarks rotor and the resulting linear traversal, which matches the core rotor-navigation failure. It does not mention the Headings rotor showing only the page title."
      }
     ],
     "mode_expected": "repair",
     "mode_inferred": "repair",
-    "intervention_content_ok": true,
-    "intervention_note": "The suggested repair properly targets top-level container elements to assign banner, navigation, main, and complementary ARIA landmark roles.",
+    "intervention_content_ok": false,
+    "intervention_note": "The repair injects landmark roles (banner, navigation, main, complementary) but does not expose visible subsection titles as correctly leveled headings, so it only partly achieves the expected semantic page structure.",
     "report_expected": true,
-    "report_ok": true,
-    "report_note": "The report accurately explains the landmark navigation failure and provides clear developer mitigation steps.",
+    "report_ok": false,
+    "report_note": "The report describes the missing landmarks with a concrete developer-facing mitigation, but does not address the Headings rotor issue (only page title), so it does not cover the full expected friction.",
     "pattern_ok": true,
-    "pattern_note": "Accurately identified VoiceOver screen reader usage and rotor navigation.",
+    "pattern_note": "The session interaction pattern explicitly identifies VoiceOver with Rotor navigation, matching the expected nonvisual blind/VoiceOver context.",
     "extra_inferred_frictions": [],
-    "verdict": "pass",
-    "rationale": "GAM correctly identified the missing ARIA landmarks on Weather.gov, provided a working repair intervention to assign ARIA landmark roles, and generated a complete report item."
+    "verdict": "partial",
+    "rationale": "The primary landmark/rotor friction is surfaced and the mode matches (repair), but the repair and report omit the missing headings portion of the ground-truth friction, so the required semantic page structure is only partially delivered."
    },
    "ablation": {
     "case_id": "blind:weather-gov",
@@ -5110,21 +5122,21 @@
        "e92a096f-b7e0-4724-b869-041b13a3fd2d"
       ],
       "inferred_severity": 2,
-      "note": "Successfully identified the long horizontal panning friction separating flavor labels and quantity controls under magnification."
+      "note": "GAM describes the same label/stepper separation and horizontal panning under macOS Zoom, including risk of incrementing the wrong row — semantically equivalent to the ground-truth friction."
      }
     ],
     "mode_expected": "recommendation",
     "mode_inferred": "none",
     "intervention_content_ok": null,
-    "intervention_note": "GAM did not generate a user-facing recommendation intervention, producing only developer report output.",
+    "intervention_note": "No recommendation or repair intervention was produced; the only intervention is a report finding. Expected a browser reflow / label-control proximity recommendation.",
     "report_expected": true,
     "report_ok": true,
-    "report_note": "Report mitigation accurately addresses the layout separation and suggests reflow and accessible names.",
+    "report_note": "The report finding proposes reducing label-to-control distance, allowing reflow, and adding accessible names to steppers — a sensible developer-facing mitigation covering the friction.",
     "pattern_ok": true,
-    "pattern_note": "Interaction pattern correctly identifies macOS Zoom screen magnification.",
+    "pattern_note": "Interaction pattern explicitly identifies 'Screen magnification using macOS Zoom', matching the low-vision magnification context.",
     "extra_inferred_frictions": [],
     "verdict": "partial",
-    "rationale": "GAM accurately identified the low-vision panning friction and provided a strong developer report and pattern, but failed to produce a user-facing recommendation intervention."
+    "rationale": "The single ground-truth friction was accurately surfaced with matching severity and the report finding is sound, but GAM did not produce the expected recommendation mode — it only emitted a report finding. Thus the case is partially satisfied."
    },
    "ablation": {
     "case_id": "lv:uber-eats",
@@ -5302,21 +5314,21 @@
        "a2bd332f-1134-4339-9425-641485e5058d"
       ],
       "inferred_severity": 2,
-      "note": "GAM accurately detected the horizontal panning issue between option labels and quantity controls under magnification."
+      "note": "Inferred friction describes flavor labels and quantity controls at opposite edges of a wide modal row, never simultaneously visible under magnification, causing excessive horizontal panning and association loss — semantically equivalent to the ground-truth friction."
      }
     ],
     "mode_expected": "recommendation",
     "mode_inferred": "none",
     "intervention_content_ok": null,
-    "intervention_note": "No recommendation intervention was produced; only a report-type intervention was generated.",
+    "intervention_note": "GAM produced only a report-type intervention; no browser-zoom reflow recommendation or repair was emitted.",
     "report_expected": true,
     "report_ok": true,
-    "report_note": "Report intervention correctly describes the wide modal layout friction and offers valid developer mitigations regarding reflow and layout width.",
+    "report_note": "The report item gives a detailed developer-facing mitigation (constrain row width, reflow modal content, keep label-control association), covering the expected friction.",
     "pattern_ok": true,
-    "pattern_note": "Correctly identified active macOS Zoom screen magnification usage.",
+    "pattern_note": "Interaction pattern explicitly identifies macOS Zoom magnification and panning, matching the expected low-vision access context.",
     "extra_inferred_frictions": [],
     "verdict": "partial",
-    "rationale": "GAM successfully detected the core accessibility friction and generated a solid developer report. However, it failed to produce a user-facing recommendation intervention as expected for this case."
+    "rationale": "The ground-truth friction is accurately surfaced and the pattern matches, but GAM produced no recommendation/repair — only a report — so the expected intervention mode is missing."
    },
    "ablation": {
     "case_id": "lv:uber-eats",
@@ -5494,21 +5506,21 @@
        "ab2b136f-251f-4dc1-b35f-9238ba493c2a"
       ],
       "inferred_severity": 2,
-      "note": "GAM correctly identified the need for horizontal panning across flight result rows under magnification."
+      "note": "GAM described the same friction: high magnification forces horizontal panning because the flight row does not fit the viewport, requiring repeated panning between price/expand controls and departure details. Severity matches."
      }
     ],
     "mode_expected": "recommendation",
     "mode_inferred": "none",
     "intervention_content_ok": null,
-    "intervention_note": "No user-facing recommendation intervention was generated, as the only intervention provided was of type report.",
+    "intervention_note": "The only intervention produced was a developer-facing report; no browser-reflow recommendation or other user-facing recommendation/repair was generated.",
     "report_expected": true,
     "report_ok": true,
-    "report_note": "GAM generated a detailed developer report item describing the layout issue and recommending reflow and card stacking mitigations.",
+    "report_note": "The report identifies the wide non-reflowing row, describes the observed panning, and proposes a narrow-width stacked-card layout plus keeping price and expand control adjacent — a sensible developer-facing mitigation.",
     "pattern_ok": true,
-    "pattern_note": "Interaction pattern correctly identified macOS Zoom screen magnification usage.",
+    "pattern_note": "Session interaction_patterns explicitly identify macOS Zoom magnification with pointer-driven horizontal panning, matching the expected low-vision magnification access context.",
     "extra_inferred_frictions": [],
     "verdict": "partial",
-    "rationale": "GAM correctly detected the main friction and generated an appropriate report, but failed to provide a recommendation intervention as expected for recommendation mode."
+    "rationale": "The ground-truth friction was surfaced with matching severity, and the access pattern and developer report are correct. However, the expected user-facing recommendation (e.g., Command-Plus browser zoom to reflow) was not emitted — GAM produced only a report, so the intervention grade is not met."
    },
    "ablation": {
     "case_id": "lv:google-flights",
@@ -7715,21 +7727,21 @@
        "b50d51ff-bca4-4bcd-bff5-f6c006942821"
       ],
       "inferred_severity": 2,
-      "note": "GAM accurately detected the hover navigation menu collapse during magnified pointer panning."
+      "note": "GAM surfaced the hover mega-menu collapsing during magnified pointer panning, matching the GT description of hover-only menus dismissing while the user pans toward lower items."
      }
     ],
     "mode_expected": "none",
     "mode_inferred": "none",
     "intervention_content_ok": null,
-    "intervention_note": "Expected mode is none and GAM produced no repair or recommendation interventions, correctly outputting report only.",
+    "intervention_note": "GT expected no repair/recommendation; GAM produced only a report-type intervention, so there is no repair/recommendation content to grade.",
     "report_expected": true,
     "report_ok": true,
-    "report_note": "GAM produced a detailed developer report covering the hover menu dismissal issue with comprehensive mitigation steps.",
+    "report_note": "GAM's report for friction b50d51ff... describes the dismiss-on-pointer-out failure under magnification and provides a concrete developer-facing mitigation: keep the menu persistent/dismissible, add hover tolerance, and support click/keyboard activation.",
     "pattern_ok": true,
-    "pattern_note": "Correctly identified macOS Zoom magnification and pointer panning access pattern.",
+    "pattern_note": "interaction_patterns explicitly identify macOS Zoom magnification and pointer-driven viewport panning, matching the low-vision magnification access context.",
     "extra_inferred_frictions": [],
     "verdict": "pass",
-    "rationale": "GAM correctly identified the hover menu dismissal friction for Nike under magnification with accurate severity and pattern classification. It properly produced developer report output without unauthorized repair or recommendation interventions."
+    "rationale": "The single GT friction for Nike was surfaced with equivalent semantics and matching severity (2); GAM correctly produced no repair/recommendation, its developer-facing report covers the friction with a sensible mitigation, and the interaction pattern matches the low-vision magnification context."
    },
    "ablation": {
     "case_id": "lv:nike",
@@ -8672,21 +8684,21 @@
        "49a68226-f6f8-4577-8b3d-c5c81ba50d4b"
       ],
       "inferred_severity": 3,
-      "note": "GAM correctly identified that the Kickstarter project video lacked captions and caption controls."
+      "note": "GAM inferred the same missing-caption/transcript friction with severity 3; the description matches the ground-truth friction."
      }
     ],
     "mode_expected": "recommendation",
     "mode_inferred": "recommendation",
     "intervention_content_ok": true,
-    "intervention_note": "GAM correctly recommended enabling macOS Live Captions in System Settings to assist the user with uncaptioned audio.",
+    "intervention_note": "GAM produced the expected macOS Live Captions recommendation; the companion report item supplies the expected caption/transcript guidance.",
     "report_expected": true,
     "report_ok": true,
-    "report_note": "GAM provided a developer report detailing the missing caption track and suggesting WebVTT/SRT captions and transcripts.",
-    "pattern_ok": false,
-    "pattern_note": "The session's interaction_patterns array was empty and failed to explicitly capture the DHH / Live Captions context.",
+    "report_note": "Report item identifies the missing captions and gives a developer-facing mitigation (WebVTT/SRT track, caption toggle, transcript).",
+    "pattern_ok": true,
+    "pattern_note": "No explicit interaction_patterns were serialized, but the recording name ('dhh'), task intent, and Live Captions recommendation clearly establish the DHH/text-access context.",
     "extra_inferred_frictions": [],
     "verdict": "pass",
-    "rationale": "GAM successfully identified the uncaptioned video friction, provided the expected Live Captions recommendation, and generated a complete developer mitigation report."
+    "rationale": "The single ground-truth friction was surfaced with matching severity; GAM's Live Captions recommendation matches the expected mode and content, the expected report was produced with a sensible mitigation, and the DHH access context is evident."
    },
    "ablation": {
     "case_id": "dhh:kickstarter",
@@ -8911,21 +8923,21 @@
        "a586ebdc-28bf-4269-aeae-507b04c4e5ff"
       ],
       "inferred_severity": 2,
-      "note": "GAM correctly detected that the video lacks captions and requires Live Captions as a fallback."
+      "note": "GAM surfaced the same missing-captions friction on the Kickstarter campaign video, albeit with severity 2 vs ground-truth 3."
      }
     ],
     "mode_expected": "recommendation",
     "mode_inferred": "recommendation",
     "intervention_content_ok": true,
-    "intervention_note": "Recommends enabling macOS Live Captions when closed captions are absent from the video.",
+    "intervention_note": "GAM's recommendation names macOS Live Captions and matches the expected temporary-aid guidance.",
     "report_expected": true,
     "report_ok": true,
-    "report_note": "Report correctly identifies the missing synchronized captions and provides developer mitigation steps.",
+    "report_note": "Report describes the failing video and gives a realistic developer mitigation (author WebVTT captions, expose caption toggle, add transcript).",
     "pattern_ok": true,
-    "pattern_note": "Interaction pattern correctly recognizes macOS Live Captions usage for spoken audio transcription.",
+    "pattern_note": "Interaction patterns explicitly identify macOS Live Captions for spoken audio, matching the expected DHH/Live Captions context.",
     "extra_inferred_frictions": [],
     "verdict": "pass",
-    "rationale": "GAM correctly identified the uncaptioned video friction, recommended macOS Live Captions, and generated an effective developer report with actionable mitigations."
+    "rationale": "The single inferred friction for the Kickstarter session directly matches the ground-truth friction (no captions on the campaign video), the recommendation correctly directs the user to macOS Live Captions, and the report provides a sensible author-side caption/transcript mitigation. The interaction pattern also confirms the DHH/Live Captions context."
    },
    "ablation": {
     "case_id": "dhh:kickstarter",
