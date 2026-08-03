@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GAM Evaluation Results</title>
+<style>
+  :root { --ok:#0a7d33; --bad:#b3261e; --mid:#9a6700; --line:#d9dde4; --dim:#5d6470; --bg:#f5f6f8; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:14px/1.5 -apple-system,"Segoe UI",sans-serif; color:#191d24; background:var(--bg); }
+  header { background:#fff; border-bottom:1px solid var(--line); padding:14px 24px; position:sticky; top:0; z-index:9; }
+  header .bar { display:flex; gap:14px; align-items:center; flex-wrap:wrap; }
+  header h1 { font-size:17px; margin:0; }
+  select { font:inherit; padding:4px 8px; }
+  .stats { display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+  .tile { background:#f2f4f8; border:1px solid var(--line); border-radius:9px; padding:6px 12px; min-width:118px; }
+  .tile b { display:block; font-size:19px; }
+  .tile span { color:var(--dim); font-size:11.5px; }
+  .groupstats { margin-top:8px; font-size:12px; color:var(--dim); overflow-x:auto; }
+  .groupstats table { border-collapse:collapse; }
+  .groupstats td, .groupstats th { padding:2px 10px 2px 0; text-align:left; white-space:nowrap; }
+  main { padding:16px 24px 80px; max-width:1500px; margin:0 auto; }
+  h2.group { margin:26px 0 6px; font-size:16px; text-transform:capitalize; }
+  h3.cat { margin:14px 0 8px; font-size:13.5px; color:var(--dim); font-weight:600; }
+  .item { background:#fff; border:1px solid var(--line); border-radius:10px; margin:0 0 12px; overflow:hidden; }
+  .item.untested { opacity:.55; }
+  .item > summary { list-style:none; cursor:pointer; padding:10px 14px; }
+  .item > summary::-webkit-details-marker { display:none; }
+  .ttl { font-weight:650; }
+  .rid { color:var(--dim); font-size:12px; margin-left:8px; }
+  .strip { display:flex; gap:6px; flex-wrap:wrap; margin-top:6px; }
+  .chip { font-size:11.5px; padding:1px 8px; border-radius:999px; border:1px solid var(--line); background:#f4f5f8; white-space:nowrap; }
+  .chip.ok { background:#e7f5eb; color:var(--ok); border-color:#b7dfc4; }
+  .chip.no { background:#fdecea; color:var(--bad); border-color:#f3b9b6; }
+  .chip.mid { background:#fff3d4; color:var(--mid); border-color:#e9d69b; }
+  .chip.na { color:var(--dim); }
+  .cols { display:grid; grid-template-columns:1fr 1fr 1fr; border-top:1px solid var(--line); }
+  .col { padding:12px 14px; min-width:0; }
+  .col + .col { border-left:1px solid var(--line); }
+  .col h4 { margin:0 0 8px; font-size:11.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--dim); }
+  .sub { margin:0 0 12px; }
+  .sub .subhead { display:flex; align-items:center; gap:8px; font-weight:600; font-size:12.5px; margin-bottom:4px; }
+  .blockcard { background:#f7f8fa; border-radius:8px; padding:7px 10px; margin-bottom:6px; font-size:13px; }
+  .meta { color:var(--dim); font-size:12px; }
+  .note { color:var(--dim); font-size:12px; margin-top:3px; }
+  .empty { color:var(--dim); font-style:italic; font-size:12.5px; }
+  @media (max-width:1100px){ .cols { grid-template-columns:1fr; } .col + .col { border-left:none; border-top:1px solid var(--line);} }
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <h1>GAM Evaluation Results</h1>
+    <label>Round: <select id="round"></select></label>
+    <span id="meta" class="meta"></span>
+  </div>
+  <div class="stats" id="stats"></div>
+  <div class="groupstats" id="groupstats"></div>
+</header>
+<main id="main">Loading…</main>
+<script>
+const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pct = v => (v === null || v === undefined) ? "—" : (v*100).toFixed(1) + "%";
+const chip = (t, cls="") => `<span class="chip ${cls}">${esc(t)}</span>`;
+const tri = v => v === true ? "ok" : v === false ? "no" : "na";
+const triTxt = (label, v) => chip(`${label}: ${v === true ? "yes" : v === false ? "no" : "n/a"}`, tri(v));
+
+const METRICS = [
+  ["friction_recall","friction recall"],
+  ["extra_frictions_per_case","extra frictions /case"],
+  ["non_report_intervention_recall","intervention recall"],
+  ["non_report_intervention_ok","intervention ok"],
+  ["report_accuracy","report accuracy"],
+  ["interaction_pattern_accuracy","pattern accuracy"],
+];
+
+function stats(m) {
+  const o = (m || {}).overall || {};
+  document.getElementById("stats").innerHTML = METRICS.map(([k, label]) => {
+    const v = o[k];
+    const shown = k === "extra_frictions_per_case" ? (v ?? "—") : pct(v);
+    return `<div class="tile"><b>${esc(shown)}</b><span>${esc(label)}</span></div>`;
+  }).join("") + `<div class="tile"><b>${o.verdict_pass ?? "—"}/${o.cases_tested ?? "—"}</b><span>cases pass / tested</span></div>`;
+  const pg = (m || {}).per_group || {};
+  const rows = Object.entries(pg).map(([g, b]) =>
+    `<tr><th>${esc(g)}</th>` + METRICS.map(([k]) =>
+      `<td>${k === "extra_frictions_per_case" ? (b[k] ?? "—") : pct(b[k])}</td>`).join("") + `</tr>`).join("");
+  document.getElementById("groupstats").innerHTML = rows
+    ? `<table><tr><th></th>${METRICS.map(([,l])=>`<th>${esc(l)}</th>`).join("")}</tr>${rows}</table>` : "";
+}
+
+function frictionSub(gt, judge) {
+  const results = (judge || {}).friction_results || [];
+  const rows = (gt?.frictions || []).map((f, i) => {
+    const r = results.find(x => x.gt_friction_index === i);
+    const v = r ? (r.surfaced ? "ok" : "no") : "na";
+    return `<div class="blockcard">${esc(f.description)}
+      <div class="meta">${chip(r ? (r.surfaced ? "surfaced" : "missed") : "not judged", v)} ${r?.note ? esc(r.note) : ""}</div></div>`;
+  }).join("");
+  return rows || `<div class="empty">none listed</div>`;
+}
+
+function gtColumn(it) {
+  const gt = it.gt || {};
+  const exp = gt.expected_interventions || {};
+  const items = (exp.items || []).map(x => `<div class="blockcard"><b>${esc(x.type)}</b> — ${esc(x.description)}</div>`).join("");
+  return `<div class="col"><h4>Ground truth</h4>
+    ${it.pathway_description ? `<div class="note">Pathway: ${esc(it.pathway_description)}</div><br/>` : ""}
+    <div class="sub"><div class="subhead">Frictions</div>${(gt.frictions||[]).map(f=>`<div class="blockcard">${esc(f.description)}</div>`).join("")||'<div class="empty">—</div>'}</div>
+    <div class="sub"><div class="subhead">Intervention</div>
+      <div class="blockcard">expected mode: <b>${esc(exp.mode)}</b></div>${items}</div>
+    <div class="sub"><div class="subhead">Report</div><div class="blockcard">${exp.report ? "report expected: the developer report should cover the friction(s)" : "no report expected: a correct report has no finding here"}</div></div>
+    <div class="sub"><div class="subhead">Patterns</div><div class="blockcard">${esc((gt.expected_patterns||{}).access_context||"")} · ${esc((gt.expected_patterns||{}).assistive_technology||"")}</div></div>
+    ${gt.notes ? `<div class="note">${esc(gt.notes)}</div>` : ""}
+  </div>`;
+}
+
+function gamColumn(it) {
+  const j = it.judge || null;
+  const inf = it.inferred || {};
+  const frs = (inf.frictions || []).map(f =>
+    `<div class="blockcard">${esc(f.title||"")}${f.title?": ":""}${esc(f.description||"")}
+     ${(f.interventions||[]).map(iv=>`<div class="meta"><b>${esc(iv.type)}</b> — ${esc(iv.description||iv.mitigation||"")}</div>`).join("")}</div>`).join("");
+  const pats = (inf.patterns || []).map(p => `<div class="blockcard">${esc(p.title)} <span class="meta">(${(p.confidence??0).toFixed(2)})</span></div>`).join("");
+  const interOk = j ? (j.mode_inferred === j.mode_expected ? (j.intervention_content_ok ?? (j.mode_expected === "none" ? null : false)) : false) : null;
+  return `<div class="col"><h4>GAM inferred</h4>
+    <div class="sub"><div class="subhead">Frictions ${j ? chip(((j.friction_results||[]).filter(f=>f.surfaced).length)+"/"+((j.friction_results||[]).length)+" surfaced", (j.friction_results||[]).every(f=>f.surfaced)&&(j.friction_results||[]).length?"ok":"no"):""}</div>
+      ${frictionSub(it.gt, j)}
+      <div class="subhead" style="margin-top:6px">Inferred frictions (raw)</div>${frs || '<div class="empty">none inferred</div>'}
+      ${(j?.extra_inferred_frictions||[]).map(e=>`<div class="note">extra: ${esc(e.assessment)}</div>`).join("")}</div>
+    <div class="sub"><div class="subhead">Intervention ${j?triTxt("ok", interOk):""}</div>
+      <div class="blockcard">produced mode: <b>${esc(j?.mode_inferred ?? "—")}</b> (expected ${esc(j?.mode_expected ?? (it.gt?.expected_interventions||{}).mode ?? "—")})</div>
+      ${j?.intervention_note ? `<div class="note">${esc(j.intervention_note)}</div>` : ""}</div>
+    <div class="sub"><div class="subhead">Report ${j?triTxt("ok", j.report_ok):""}</div>${j?.report_note ? `<div class="blockcard">${esc(j.report_note)}</div>` : '<div class="empty">—</div>'}</div>
+    <div class="sub"><div class="subhead">Patterns ${j?triTxt("ok", j.pattern_ok):""}</div>${pats || '<div class="empty">none inferred</div>'}
+      ${j?.pattern_note ? `<div class="note">${esc(j.pattern_note)}</div>` : ""}</div>
+    ${j?.rationale ? `<div class="note">Judge: ${esc(j.rationale)}</div>` : ""}
+    <div class="note">session ${esc((it.session||{}).conversation_id||"")}</div>
+  </div>`;
+}
+
+function ablColumn(it) {
+  const a = it.ablation;
+  if (!a) return `<div class="col"><h4>LLM-only baseline (Opus 5)</h4><div class="empty">${it.user_group && it.gt && (it.gt.expected_patterns||{}) && (itIsWeb(it) ? "not run yet" : "N/A — non-web example (baseline needs page HTML)")}</div></div>`;
+  const group = it.user_group === "low_vision" ? "low_vision" : it.user_group;
+  const barriers = ((a.barriers || {})[group] || []).map(b => `<div class="blockcard">${esc(b.description || b)}</div>`).join("");
+  const judged = (a.judged || {}).per_case?.[it.case_id] || (a.judged || {});
+  const fr = judged.friction_results || [];
+  const recall = fr.length ? `${fr.filter(f=>f.surfaced).length}/${fr.length} GT surfaced` : null;
+  const frRows = (it.gt?.frictions || []).map((f, i) => {
+    const r = fr.find(x => x.gt_friction_index === i);
+    return `<div class="blockcard">${esc(f.description)}<div class="meta">${chip(r ? (r.surfaced ? "surfaced" : "missed") : "not judged", r ? (r.surfaced?"ok":"no") : "na")}</div></div>`;
+  }).join("");
+  return `<div class="col"><h4>LLM-only baseline (Opus 5)</h4>
+    <div class="note">Static page audit (HTML + a11y tree + standards); no interaction data — identical for every pathway of this example.</div><br/>
+    <div class="sub"><div class="subhead">Frictions ${recall ? chip(recall, fr.every(f=>f.surfaced)&&fr.length?"ok":"no") : ""}</div>
+      ${frRows}
+      <div class="subhead" style="margin-top:6px">Baseline barriers for ${esc(group)} (raw)</div>${barriers || '<div class="empty">none listed for this group</div>'}
+      ${judged.extra_count !== undefined ? `<div class="note">extra (non-GT) barriers for this group: ${judged.extra_count}</div>` : ""}</div>
+    <div class="sub"><div class="subhead">Intervention ${chip("n/a","na")}</div><div class="empty">baseline detects barriers only</div></div>
+    <div class="sub"><div class="subhead">Report ${chip("n/a","na")}</div><div class="empty">—</div></div>
+    <div class="sub"><div class="subhead">Patterns ${chip("n/a","na")}</div><div class="empty">no interaction data</div></div>
+  </div>`;
+}
+function itIsWeb(it){ return true; }
+
+function itemHtml(it) {
+  const j = it.judge;
+  const untested = !j;
+  const surfaced = j ? (j.friction_results||[]).filter(f=>f.surfaced).length : 0;
+  const total = j ? (j.friction_results||[]).length : (it.gt?.frictions||[]).length;
+  const extras = j ? (j.extra_inferred_frictions||[]).length : 0;
+  const interOk = j ? (j.mode_inferred === j.mode_expected ? (j.intervention_content_ok ?? (j.mode_expected === "none" ? null : false)) : false) : null;
+  const strip = untested ? chip("not tested","na") : [
+    chip("verdict: " + j.verdict, j.verdict === "pass" ? "ok" : j.verdict === "partial" ? "mid" : "no"),
+    chip(`mode: ${j.mode_inferred} / want ${j.mode_expected}`, j.mode_inferred === j.mode_expected ? "ok" : "no"),
+    chip(`frictions: ${surfaced}/${total}`, surfaced === total && total ? "ok" : "no"),
+    triTxt("intervention", interOk),
+    triTxt("report", j.report_ok),
+    triTxt("patterns", j.pattern_ok),
+    chip(`extras: ${extras}`, extras ? "mid" : ""),
+  ].join(" ");
+  return `<details class="item ${untested ? "untested" : ""}" ${j && j.verdict !== "pass" ? "open" : ""}>
+    <summary><span class="ttl">${esc(it.example_name)} — pathway ${esc(it.pathway ?? "?")}</span>
+      <span class="rid">${esc(it.case_id)} · ${esc(it.recording_id)}</span>
+      <div class="strip">${strip}</div></summary>
+    <div class="cols">${gtColumn(it)}${gamColumn(it)}${ablColumn(it)}</div>
+  </details>`;
+}
+
+async function loadRound(file) {
+  const data = await (await fetch("data/" + file)).json();
+  stats(data.metrics);
+  document.getElementById("meta").textContent =
+    `${data.items.length} recordings · GT ${data.ground_truth_version} · built ${String(data.generated_at).slice(0,16)}`;
+  const groups = {};
+  data.items.forEach(it => {
+    const g = it.user_group || "other";
+    (groups[g] = groups[g] || {});
+    (groups[g][it.category || "?"] = groups[g][it.category || "?"] || []).push(it);
+  });
+  document.getElementById("main").innerHTML = Object.entries(groups).map(([g, cats]) =>
+    `<h2 class="group">${esc(g.replace("_"," "))}</h2>` +
+    Object.entries(cats).map(([cat, items]) =>
+      `<h3 class="cat">${esc(cat)}</h3>` + items.map(itemHtml).join("")).join("")
+  ).join("");
+}
+
+(async () => {
+  const manifest = await (await fetch("data/index.json")).json();
+  const sel = document.getElementById("round");
+  manifest.rounds.forEach(r => sel.insertAdjacentHTML("beforeend",
+    `<option value="${esc(r.file)}">${esc(r.round)} (${esc(String(r.generated_at).slice(0,10))})</option>`));
+  sel.onchange = () => loadRound(sel.value);
+  if (manifest.rounds.length) loadRound(manifest.rounds[0].file);
+  else document.getElementById("main").innerHTML = "<p class='empty'>No rounds built yet.</p>";
+})();
+</script>
+</body>
+</html>
