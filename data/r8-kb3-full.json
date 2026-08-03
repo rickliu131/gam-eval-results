@@ -1,6 +1,6 @@
 {
  "round": "r8-kb3-full",
- "generated_at": "2026-08-03T08:23:38.149290+00:00",
+ "generated_at": "2026-08-03T08:38:02.962726+00:00",
  "metrics": {
   "overall": {
    "cases_tested": 62,
@@ -118,6 +118,28 @@
     "report_accuracy": 0.3,
     "interaction_pattern_accuracy": 0.1
    }
+  }
+ },
+ "ablation_metrics": {
+  "overall": {
+   "friction_recall": 0.6296,
+   "extra_frictions_per_case": 8.93,
+   "cases_judged": 27
+  },
+  "blind": {
+   "friction_recall": 0.9167,
+   "extra_frictions_per_case": 14.0,
+   "cases_judged": 12
+  },
+  "low_vision": {
+   "friction_recall": 0.3333,
+   "extra_frictions_per_case": 5.92,
+   "cases_judged": 12
+  },
+  "dhh": {
+   "friction_recall": 0.6667,
+   "extra_frictions_per_case": 0.67,
+   "cases_judged": 3
   }
  },
  "ground_truth_version": "2026-08-03",

@@ -74,19 +74,23 @@ const METRICS = [
   ["interaction_pattern_accuracy","pattern accuracy"],
 ];
 
-function stats(m) {
+function stats(m, abl) {
   const o = (m || {}).overall || {};
   document.getElementById("stats").innerHTML = METRICS.map(([k, label]) => {
     const v = o[k];
     const shown = k === "extra_frictions_per_case" ? (v ?? "—") : pct(v);
-    return `<div class="tile"><b>${esc(shown)}</b><span>${esc(label)}</span></div>`;
-  }).join("") + `<div class="tile"><b>${o.verdict_pass ?? "—"}/${o.cases_tested ?? "—"}</b><span>cases pass / tested</span></div>`;
+    return `<div class="tile"><b>${esc(shown)}</b><span>GAM · ${esc(label)}</span></div>`;
+  }).join("") + `<div class="tile"><b>${o.verdict_pass ?? "—"}/${o.cases_tested ?? "—"}</b><span>GAM · cases pass / tested</span></div>`;
   const pg = (m || {}).per_group || {};
-  const rows = Object.entries(pg).map(([g, b]) =>
-    `<tr><th>${esc(g)}</th>` + METRICS.map(([k]) =>
-      `<td>${k === "extra_frictions_per_case" ? (b[k] ?? "—") : pct(b[k])}</td>`).join("") + `</tr>`).join("");
-  document.getElementById("groupstats").innerHTML = rows
-    ? `<table><tr><th></th>${METRICS.map(([,l])=>`<th>${esc(l)}</th>`).join("")}</tr>${rows}</table>` : "";
+  const fmt = (b, k) => k === "extra_frictions_per_case" ? (b?.[k] ?? "—") : pct(b?.[k]);
+  const gamRows = Object.entries(pg).map(([g, b]) =>
+    `<tr><th>GAM · ${esc(g)}</th>` + METRICS.map(([k]) => `<td>${fmt(b, k)}</td>`).join("") + `</tr>`).join("");
+  const a = abl || {};
+  const ablRows = Object.entries(a).filter(([g]) => g !== "overall").map(([g, b]) =>
+    `<tr><th>LLM-only · ${esc(g)}</th><td>${pct(b.friction_recall)}</td><td>${b.extra_frictions_per_case ?? "—"}</td><td colspan="4">n/a (barriers only; ${b.cases_judged} web cases)</td></tr>`).join("");
+  const ablOverall = a.overall ? `<tr><th><b>LLM-only · overall</b></th><td><b>${pct(a.overall.friction_recall)}</b></td><td><b>${a.overall.extra_frictions_per_case ?? "—"}</b></td><td colspan="4">static page audit (Opus 5, HTML + a11y tree + standards; no interaction data); ${a.overall.cases_judged} web cases</td></tr>` : "";
+  document.getElementById("groupstats").innerHTML = (gamRows || ablOverall)
+    ? `<table><tr><th></th>${METRICS.map(([,l])=>`<th>${esc(l)}</th>`).join("")}</tr>${gamRows}${ablOverall}${ablRows}</table>` : "";
 }
 
 function frictionSub(gt, judge) {
@@ -190,7 +194,7 @@ function itemHtml(it) {
 
 async function loadRound(file) {
   const data = await (await fetch("data/" + file)).json();
-  stats(data.metrics);
+  stats(data.metrics, data.ablation_metrics);
   document.getElementById("meta").textContent =
     `${data.items.length} recordings · GT ${data.ground_truth_version} · built ${String(data.generated_at).slice(0,16)}`;
   const groups = {};
