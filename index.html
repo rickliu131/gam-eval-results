@@ -77,7 +77,7 @@ const METRICS = [
   ["non_report_intervention_recall","intervention recall"],
   ["non_report_intervention_ok","intervention ok"],
   ["report_accuracy","report accuracy"],
-  ["interaction_pattern_accuracy","pattern accuracy"],
+  ["interaction_pattern_accuracy","interaction pattern accuracy"],
 ];
 const RAW_METRICS = new Set(["extra_frictions_per_case"]);
 
@@ -164,7 +164,7 @@ function gtColumn(it) {
     <div class="sub"><div class="subhead">Intervention</div>
       <div class="blockcard">expected mode: <b>${esc(exp.mode)}</b></div>${items}</div>
     <div class="sub"><div class="subhead">Report</div><div class="blockcard">${exp.report ? "report expected: the developer report should cover the friction(s)" : "no report expected: a correct report has no finding here"}</div></div>
-    <div class="sub"><div class="subhead">Patterns</div><div class="blockcard">${esc((gt.expected_patterns||{}).access_context||"")} · ${esc((gt.expected_patterns||{}).assistive_technology||"")}</div></div>
+    <div class="sub"><div class="subhead">Interaction patterns</div><div class="blockcard">${esc((gt.expected_patterns||{}).access_context||"")} · ${esc((gt.expected_patterns||{}).assistive_technology||"")}</div></div>
     ${gt.notes ? `<div class="note">${esc(gt.notes)}</div>` : ""}
   </div>`;
 }
@@ -184,7 +184,7 @@ function gamColumn(it) {
       <div class="blockcard">produced mode: <b>${esc(j?.mode_inferred ?? "—")}</b> (expected ${esc(j?.mode_expected ?? (it.gt?.expected_interventions||{}).mode ?? "—")})</div>
       ${j?.intervention_note ? `<div class="note">${esc(j.intervention_note)}</div>` : ""}</div>
     <div class="sub"><div class="subhead">Report ${j?triTxt("ok", j.report_ok):""}</div>${j?.report_note ? `<div class="blockcard">${esc(j.report_note)}</div>` : '<div class="empty">—</div>'}</div>
-    <div class="sub"><div class="subhead">Patterns ${j?triTxt("ok", j.pattern_ok):""}</div>${pats || '<div class="empty">none inferred</div>'}
+    <div class="sub"><div class="subhead">Interaction patterns ${j?triTxt("ok", j.pattern_ok):""}</div>${pats || '<div class="empty">none inferred</div>'}
       ${j?.pattern_note ? `<div class="note">${esc(j.pattern_note)}</div>` : ""}</div>
     ${j?.rationale ? `<div class="note">Judge: ${esc(j.rationale)}</div>` : ""}
     <div class="note">session ${esc((it.session||{}).conversation_id||"")}</div>
@@ -221,7 +221,7 @@ function itemHtml(it) {
     chip(`frictions: ${surfaced}/${total}`, surfaced === total && total ? "ok" : "no"),
     triTxt("intervention", interOk),
     triTxt("report", j.report_ok),
-    triTxt("patterns", j.pattern_ok),
+    triTxt("interaction patterns", j.pattern_ok),
     chip(`extras: ${extras}`, extras ? "mid" : ""),
   ].join(" ");
   return `<details class="item ${untested ? "untested" : ""}" ${j && j.verdict !== "pass" ? "open" : ""}>
