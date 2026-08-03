@@ -34,6 +34,11 @@
   .chip.no { background:#fdecea; color:var(--bad); border-color:#f3b9b6; }
   .chip.mid { background:#fff3d4; color:var(--mid); border-color:#e9d69b; }
   .chip.na { color:var(--dim); }
+  .fricgrid { display:grid; grid-template-columns:1fr 1fr 1fr; border-top:1px solid var(--line); }
+  .fghead { padding:8px 14px 2px; font-size:11.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--dim); }
+  .fgcell { padding:6px 14px 10px; min-width:0; font-size:13px; border-bottom:1px dashed var(--line); }
+  .fgcell.gt { font-weight:500; }
+  mark { background:#fff1a8; border-radius:3px; padding:0 2px; }
   .cols { display:grid; grid-template-columns:1fr 1fr 1fr; border-top:1px solid var(--line); }
   .col { padding:12px 14px; min-width:0; }
   .col + .col { border-left:1px solid var(--line); }
@@ -67,41 +72,81 @@ const triTxt = (label, v) => chip(`${label}: ${v === true ? "yes" : v === false 
 
 const METRICS = [
   ["friction_recall","friction recall"],
+  ["precision","precision"],
   ["extra_frictions_per_case","extra frictions /case"],
   ["non_report_intervention_recall","intervention recall"],
   ["non_report_intervention_ok","intervention ok"],
   ["report_accuracy","report accuracy"],
   ["interaction_pattern_accuracy","pattern accuracy"],
 ];
+const RAW_METRICS = new Set(["extra_frictions_per_case"]);
 
 function stats(m, abl) {
   const o = (m || {}).overall || {};
   document.getElementById("stats").innerHTML = METRICS.map(([k, label]) => {
     const v = o[k];
-    const shown = k === "extra_frictions_per_case" ? (v ?? "—") : pct(v);
+    const shown = RAW_METRICS.has(k) ? (v ?? "—") : pct(v);
     return `<div class="tile"><b>${esc(shown)}</b><span>GAM · ${esc(label)}</span></div>`;
   }).join("") + `<div class="tile"><b>${o.verdict_pass ?? "—"}/${o.cases_tested ?? "—"}</b><span>GAM · cases pass / tested</span></div>`;
   const pg = (m || {}).per_group || {};
-  const fmt = (b, k) => k === "extra_frictions_per_case" ? (b?.[k] ?? "—") : pct(b?.[k]);
+  const fmt = (b, k) => RAW_METRICS.has(k) ? (b?.[k] ?? "—") : pct(b?.[k]);
   const gamRows = Object.entries(pg).map(([g, b]) =>
     `<tr><th>GAM · ${esc(g)}</th>` + METRICS.map(([k]) => `<td>${fmt(b, k)}</td>`).join("") + `</tr>`).join("");
   const a = abl || {};
+  const ablCells = b =>
+    `<td>${pct(b.friction_recall)}</td><td>${pct(b.precision)}</td><td>${b.extra_frictions_per_case ?? "—"}</td>`;
   const ablRows = Object.entries(a).filter(([g]) => g !== "overall").map(([g, b]) =>
-    `<tr><th>LLM-only · ${esc(g)}</th><td>${pct(b.friction_recall)}</td><td>${b.extra_frictions_per_case ?? "—"}</td><td colspan="4">n/a (barriers only; ${b.cases_judged} web cases)</td></tr>`).join("");
-  const ablOverall = a.overall ? `<tr><th><b>LLM-only · overall</b></th><td><b>${pct(a.overall.friction_recall)}</b></td><td><b>${a.overall.extra_frictions_per_case ?? "—"}</b></td><td colspan="4">static page audit (Opus 5, HTML + a11y tree + standards; no interaction data); ${a.overall.cases_judged} web cases</td></tr>` : "";
+    `<tr><th>LLM-only · ${esc(g)}</th>${ablCells(b)}<td colspan="4">n/a — ${b.barriers_per_case ?? "?"} barriers listed /case; ${b.cases_judged} web cases</td></tr>`).join("");
+  const ablOverall = a.overall ? `<tr><th><b>LLM-only · overall</b></th>${ablCells(a.overall)}<td colspan="4">static page audit (Opus 5, HTML + a11y tree + standards; no interaction data); ${a.overall.barriers_per_case ?? "?"} barriers /case over ${a.overall.cases_judged} web cases</td></tr>` : "";
   document.getElementById("groupstats").innerHTML = (gamRows || ablOverall)
     ? `<table><tr><th></th>${METRICS.map(([,l])=>`<th>${esc(l)}</th>`).join("")}</tr>${gamRows}${ablOverall}${ablRows}</table>` : "";
 }
 
-function frictionSub(gt, judge) {
-  const results = (judge || {}).friction_results || [];
-  const rows = (gt?.frictions || []).map((f, i) => {
-    const r = results.find(x => x.gt_friction_index === i);
-    const v = r ? (r.surfaced ? "ok" : "no") : "na";
-    return `<div class="blockcard">${esc(f.description)}
-      <div class="meta">${chip(r ? (r.surfaced ? "surfaced" : "missed") : "not judged", v)} ${r?.note ? esc(r.note) : ""}</div></div>`;
+function frictionGrid(it) {
+  const gt = it.gt || {};
+  const j = it.judge || null;
+  const jr = (j || {}).friction_results || [];
+  const inferredById = {};
+  ((it.inferred || {}).frictions || []).forEach(f => { if (f.id) inferredById[f.id] = f; });
+  const abl = it.ablation || null;
+  const group = it.user_group;
+  const ablBarriers = abl ? ((abl.barriers || {})[group] || []) : null;
+  const ablJr = abl && abl.judged ? (abl.judged.friction_results || []) : [];
+
+  const rows = (gt.frictions || []).map((f, i) => {
+    // GAM cell: matched inferred friction text, or a miss chip.
+    const r = jr.find(x => x.gt_friction_index === i);
+    let gamCell;
+    if (!j) gamCell = chip("not tested", "na");
+    else if (r && r.surfaced) {
+      const matched = (r.matched_inferred_ids || []).map(id => inferredById[id]).filter(Boolean);
+      const text = matched.length
+        ? matched.map(m => `<div>${esc(m.title || "")}${m.title ? ": " : ""}${esc(m.description || "")}</div>`).join("")
+        : esc(r.note || "surfaced");
+      gamCell = `${chip("surfaced", "ok")} ${text}`;
+    } else gamCell = `${chip("missed", "no")}${r?.note ? ` <span class="meta">${esc(r.note)}</span>` : ""}`;
+    // LLM-only cell: matched barrier highlighted, or a miss chip.
+    let ablCell;
+    if (!abl) ablCell = chip(group === "motor" ? "n/a" : "not run", "na");
+    else {
+      const ar = ablJr.find(x => x.gt_friction_index === i);
+      if (ar && ar.surfaced) {
+        const idxs = ar.matched_barrier_indexes || [];
+        const matched = idxs.map(k => ablBarriers[k]).filter(Boolean);
+        const text = matched.length
+          ? matched.map(b => `<div><mark>${esc(b.description || b)}</mark></div>`).join("")
+          : `<mark>${esc(ar.note || "surfaced")}</mark>`;
+        ablCell = `${chip("surfaced", "ok")} ${text}`;
+      } else if (ar) ablCell = chip("missed", "no");
+      else ablCell = chip("not judged", "na");
+    }
+    return `<div class="fgcell gt">${esc(f.description)}</div>
+      <div class="fgcell">${gamCell}</div>
+      <div class="fgcell">${ablCell}</div>`;
   }).join("");
-  return rows || `<div class="empty">none listed</div>`;
+  return `<div class="fricgrid">
+    <div class="fghead">Ground-truth friction</div><div class="fghead">GAM</div><div class="fghead">LLM-only baseline</div>
+    ${rows}</div>`;
 }
 
 function gtColumn(it) {
@@ -110,7 +155,6 @@ function gtColumn(it) {
   const items = (exp.items || []).map(x => `<div class="blockcard"><b>${esc(x.type)}</b> — ${esc(x.description)}</div>`).join("");
   return `<div class="col"><h4>Ground truth</h4>
     ${it.pathway_description ? `<div class="note">Pathway: ${esc(it.pathway_description)}</div><br/>` : ""}
-    <div class="sub"><div class="subhead">Frictions</div>${(gt.frictions||[]).map(f=>`<div class="blockcard">${esc(f.description)}</div>`).join("")||'<div class="empty">—</div>'}</div>
     <div class="sub"><div class="subhead">Intervention</div>
       <div class="blockcard">expected mode: <b>${esc(exp.mode)}</b></div>${items}</div>
     <div class="sub"><div class="subhead">Report</div><div class="blockcard">${exp.report ? "report expected: the developer report should cover the friction(s)" : "no report expected: a correct report has no finding here"}</div></div>
@@ -128,9 +172,7 @@ function gamColumn(it) {
   const pats = (inf.patterns || []).map(p => `<div class="blockcard">${esc(p.title)} <span class="meta">(${(p.confidence??0).toFixed(2)})</span></div>`).join("");
   const interOk = j ? (j.mode_inferred === j.mode_expected ? (j.intervention_content_ok ?? (j.mode_expected === "none" ? null : false)) : false) : null;
   return `<div class="col"><h4>GAM inferred</h4>
-    <div class="sub"><div class="subhead">Frictions ${j ? chip(((j.friction_results||[]).filter(f=>f.surfaced).length)+"/"+((j.friction_results||[]).length)+" surfaced", (j.friction_results||[]).every(f=>f.surfaced)&&(j.friction_results||[]).length?"ok":"no"):""}</div>
-      ${frictionSub(it.gt, j)}
-      <div class="subhead" style="margin-top:6px">Inferred frictions (raw)</div>${frs || '<div class="empty">none inferred</div>'}
+    <div class="sub"><div class="subhead">All inferred frictions</div>${frs || '<div class="empty">none inferred</div>'}
       ${(j?.extra_inferred_frictions||[]).map(e=>`<div class="note">extra: ${esc(e.assessment)}</div>`).join("")}</div>
     <div class="sub"><div class="subhead">Intervention ${j?triTxt("ok", interOk):""}</div>
       <div class="blockcard">produced mode: <b>${esc(j?.mode_inferred ?? "—")}</b> (expected ${esc(j?.mode_expected ?? (it.gt?.expected_interventions||{}).mode ?? "—")})</div>
@@ -148,18 +190,10 @@ function ablColumn(it) {
   if (!a) return `<div class="col"><h4>LLM-only baseline (Opus 5)</h4><div class="empty">${it.user_group && it.gt && (it.gt.expected_patterns||{}) && (itIsWeb(it) ? "not run yet" : "N/A — non-web example (baseline needs page HTML)")}</div></div>`;
   const group = it.user_group === "low_vision" ? "low_vision" : it.user_group;
   const barriers = ((a.barriers || {})[group] || []).map(b => `<div class="blockcard">${esc(b.description || b)}</div>`).join("");
-  const judged = (a.judged || {}).per_case?.[it.case_id] || (a.judged || {});
-  const fr = judged.friction_results || [];
-  const recall = fr.length ? `${fr.filter(f=>f.surfaced).length}/${fr.length} GT surfaced` : null;
-  const frRows = (it.gt?.frictions || []).map((f, i) => {
-    const r = fr.find(x => x.gt_friction_index === i);
-    return `<div class="blockcard">${esc(f.description)}<div class="meta">${chip(r ? (r.surfaced ? "surfaced" : "missed") : "not judged", r ? (r.surfaced?"ok":"no") : "na")}</div></div>`;
-  }).join("");
+  const judged = a.judged || {};
   return `<div class="col"><h4>LLM-only baseline (Opus 5)</h4>
     <div class="note">Static page audit (HTML + a11y tree + standards); no interaction data — identical for every pathway of this example.</div><br/>
-    <div class="sub"><div class="subhead">Frictions ${recall ? chip(recall, fr.every(f=>f.surfaced)&&fr.length?"ok":"no") : ""}</div>
-      ${frRows}
-      <div class="subhead" style="margin-top:6px">Baseline barriers for ${esc(group)} (raw)</div>${barriers || '<div class="empty">none listed for this group</div>'}
+    <div class="sub"><div class="subhead">All baseline barriers for ${esc(group)}</div>${barriers || '<div class="empty">none listed for this group</div>'}
       ${judged.extra_count !== undefined ? `<div class="note">extra (non-GT) barriers for this group: ${judged.extra_count}</div>` : ""}</div>
     <div class="sub"><div class="subhead">Intervention ${chip("n/a","na")}</div><div class="empty">baseline detects barriers only</div></div>
     <div class="sub"><div class="subhead">Report ${chip("n/a","na")}</div><div class="empty">—</div></div>
@@ -188,6 +222,7 @@ function itemHtml(it) {
     <summary><span class="ttl">${esc(it.example_name)} — pathway ${esc(it.pathway ?? "?")}</span>
       <span class="rid">${esc(it.case_id)} · ${esc(it.recording_id)}</span>
       <div class="strip">${strip}</div></summary>
+    ${frictionGrid(it)}
     <div class="cols">${gtColumn(it)}${gamColumn(it)}${ablColumn(it)}</div>
   </details>`;
 }

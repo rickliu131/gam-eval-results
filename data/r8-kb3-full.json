@@ -1,6 +1,6 @@
 {
  "round": "r8-kb3-full",
- "generated_at": "2026-08-03T08:38:02.962726+00:00",
+ "generated_at": "2026-08-03T08:47:34.307619+00:00",
  "metrics": {
   "overall": {
    "cases_tested": 62,
@@ -23,7 +23,8 @@
    "non_report_intervention_recall": 0.4118,
    "non_report_intervention_ok": 0.9524,
    "report_accuracy": 0.629,
-   "interaction_pattern_accuracy": 0.8065
+   "interaction_pattern_accuracy": 0.8065,
+   "precision": 0.9118
   },
   "per_group": {
    "blind": {
@@ -47,7 +48,8 @@
     "non_report_intervention_recall": 0.7273,
     "non_report_intervention_ok": 0.9375,
     "report_accuracy": 0.8261,
-    "interaction_pattern_accuracy": 1.0
+    "interaction_pattern_accuracy": 1.0,
+    "precision": 0.95
    },
    "low_vision": {
     "cases_tested": 19,
@@ -70,7 +72,8 @@
     "non_report_intervention_recall": 0.1111,
     "non_report_intervention_ok": 1.0,
     "report_accuracy": 0.3684,
-    "interaction_pattern_accuracy": 1.0
+    "interaction_pattern_accuracy": 1.0,
+    "precision": 0.7778
    },
    "dhh": {
     "cases_tested": 10,
@@ -93,7 +96,8 @@
     "non_report_intervention_recall": 0.3,
     "non_report_intervention_ok": 1.0,
     "report_accuracy": 1.0,
-    "interaction_pattern_accuracy": 0.7
+    "interaction_pattern_accuracy": 0.7,
+    "precision": 1.0
    },
    "motor": {
     "cases_tested": 10,
@@ -116,29 +120,38 @@
     "non_report_intervention_recall": 0.1,
     "non_report_intervention_ok": 1.0,
     "report_accuracy": 0.3,
-    "interaction_pattern_accuracy": 0.1
+    "interaction_pattern_accuracy": 0.1,
+    "precision": 1.0
    }
   }
  },
  "ablation_metrics": {
   "overall": {
    "friction_recall": 0.6296,
-   "extra_frictions_per_case": 8.93,
+   "precision": 0.1082,
+   "barriers_per_case": 9.9,
+   "extra_frictions_per_case": 8.85,
    "cases_judged": 27
   },
   "blind": {
    "friction_recall": 0.9167,
-   "extra_frictions_per_case": 14.0,
+   "precision": 0.1022,
+   "barriers_per_case": 15.5,
+   "extra_frictions_per_case": 13.92,
    "cases_judged": 12
   },
   "low_vision": {
    "friction_recall": 0.3333,
+   "precision": 0.0533,
+   "barriers_per_case": 6.2,
    "extra_frictions_per_case": 5.92,
    "cases_judged": 12
   },
   "dhh": {
    "friction_recall": 0.6667,
-   "extra_frictions_per_case": 0.67,
+   "precision": 0.8571,
+   "barriers_per_case": 2.3,
+   "extra_frictions_per_case": 0.33,
    "cases_judged": 3
   }
  },
@@ -336,12 +349,15 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "Barrier 12 identifies that the Important Info disclosure button exposes only truncated text, hiding the full venue accessibility notice from screen reader users."
+       "matched_barrier_indexes": [
+        12
+       ],
+       "note": "Barrier 12 identifies the issue with the truncated Important Info disclosure button for venue accessibility info."
       }
      ],
      "extra_count": 14,
      "group": "blind",
-     "judged_at": "2026-08-03T06:47:21.153053+00:00"
+     "judged_at": "2026-08-03T08:40:30.653891+00:00"
     }
    }
   },
@@ -531,12 +547,15 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "Barrier 12 identifies that the Important Info disclosure button exposes only truncated text, hiding the full venue accessibility notice from screen reader users."
+       "matched_barrier_indexes": [
+        12
+       ],
+       "note": "Barrier 12 identifies the issue with the truncated Important Info disclosure button for venue accessibility info."
       }
      ],
      "extra_count": 14,
      "group": "blind",
-     "judged_at": "2026-08-03T06:47:21.153053+00:00"
+     "judged_at": "2026-08-03T08:40:30.653891+00:00"
     }
    }
   },
@@ -745,12 +764,14 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "The audit accurately reported that the skip link points to a non-existent anchor/main-content target, rendering the bypass mechanism non-functional."
+       "matched_barrier_indexes": [
+        0
+       ]
       }
      ],
      "extra_count": 14,
      "group": "blind",
-     "judged_at": "2026-08-03T06:48:24.506924+00:00"
+     "judged_at": "2026-08-03T08:40:34.026676+00:00"
     }
    }
   },
@@ -959,12 +980,14 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "The audit accurately reported that the skip link points to a non-existent anchor/main-content target, rendering the bypass mechanism non-functional."
+       "matched_barrier_indexes": [
+        0
+       ]
       }
      ],
      "extra_count": 14,
      "group": "blind",
-     "judged_at": "2026-08-03T06:48:24.506924+00:00"
+     "judged_at": "2026-08-03T08:40:34.026676+00:00"
     }
    }
   },
@@ -1148,12 +1171,18 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "Surfaced by barrier 2 (and 1, 8) which highlights the lack of keyboard focusability, grid semantics, and mouse-only interaction for the availability grid."
+       "matched_barrier_indexes": [
+        0,
+        1,
+        2,
+        7
+       ],
+       "note": "The audit identifies that the availability timetable slots are unlabeled divs without roles, non-focusable/keyboard-inoperable, reliant on mouseover hover interactions, and missing table/grid header relationships."
       }
      ],
-     "extra_count": 9,
+     "extra_count": 8,
      "group": "blind",
-     "judged_at": "2026-08-03T06:49:37.108039+00:00"
+     "judged_at": "2026-08-03T08:40:40.321641+00:00"
     }
    }
   },
@@ -1341,12 +1370,18 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "Surfaced by barrier 2 (and 1, 8) which highlights the lack of keyboard focusability, grid semantics, and mouse-only interaction for the availability grid."
+       "matched_barrier_indexes": [
+        0,
+        1,
+        2,
+        7
+       ],
+       "note": "The audit identifies that the availability timetable slots are unlabeled divs without roles, non-focusable/keyboard-inoperable, reliant on mouseover hover interactions, and missing table/grid header relationships."
       }
      ],
-     "extra_count": 9,
+     "extra_count": 8,
      "group": "blind",
-     "judged_at": "2026-08-03T06:49:37.108039+00:00"
+     "judged_at": "2026-08-03T08:40:40.321641+00:00"
     }
    }
   },
@@ -1551,12 +1586,15 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "Elfsight gallery slides labelled 'Visit linked content' matching the expected friction."
+       "matched_barrier_indexes": [
+        4
+       ],
+       "note": "Barrier 4 correctly identifies the category/gallery links being generic divs with role='button' labeled 'Visit linked content' without clear destination names."
       }
      ],
      "extra_count": 12,
      "group": "blind",
-     "judged_at": "2026-08-03T06:50:34.795756+00:00"
+     "judged_at": "2026-08-03T08:40:44.990293+00:00"
     }
    }
   },
@@ -1761,12 +1799,15 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "Elfsight gallery slides labelled 'Visit linked content' matching the expected friction."
+       "matched_barrier_indexes": [
+        4
+       ],
+       "note": "Barrier 4 correctly identifies the category/gallery links being generic divs with role='button' labeled 'Visit linked content' without clear destination names."
       }
      ],
      "extra_count": 12,
      "group": "blind",
-     "judged_at": "2026-08-03T06:50:34.795756+00:00"
+     "judged_at": "2026-08-03T08:40:44.990293+00:00"
     }
    }
   },
@@ -1986,12 +2027,15 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "Footer social links with missing accessible names/aria-labels are correctly identified in barrier #7."
+       "matched_barrier_indexes": [
+        6
+       ],
+       "note": "Barrier 6 correctly identifies the footer social links lacking accessible names/labels."
       }
      ],
      "extra_count": 19,
      "group": "blind",
-     "judged_at": "2026-08-03T06:51:48.836066+00:00"
+     "judged_at": "2026-08-03T08:40:48.281456+00:00"
     }
    }
   },
@@ -2214,12 +2258,15 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "Footer social links with missing accessible names/aria-labels are correctly identified in barrier #7."
+       "matched_barrier_indexes": [
+        6
+       ],
+       "note": "Barrier 6 correctly identifies the footer social links lacking accessible names/labels."
       }
      ],
      "extra_count": 19,
      "group": "blind",
-     "judged_at": "2026-08-03T06:51:48.836066+00:00"
+     "judged_at": "2026-08-03T08:40:48.281456+00:00"
     }
    }
   },
@@ -2436,12 +2483,15 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "The audit explicitly identified the two S&P 500 chart images carrying generic alt text 'Chart 1' and 'Chart 2'."
+       "matched_barrier_indexes": [
+        0
+       ],
+       "note": "Barrier 0 correctly identifies the two chart images having generic alt text ('Chart 1', 'Chart 2') preventing screen reader users from accessing the chart data."
       }
      ],
      "extra_count": 16,
      "group": "blind",
-     "judged_at": "2026-08-03T06:53:07.999391+00:00"
+     "judged_at": "2026-08-03T08:40:51.536244+00:00"
     }
    }
   },
@@ -2656,12 +2706,15 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "The audit explicitly identified the two S&P 500 chart images carrying generic alt text 'Chart 1' and 'Chart 2'."
+       "matched_barrier_indexes": [
+        0
+       ],
+       "note": "Barrier 0 correctly identifies the two chart images having generic alt text ('Chart 1', 'Chart 2') preventing screen reader users from accessing the chart data."
       }
      ],
      "extra_count": 16,
      "group": "blind",
-     "judged_at": "2026-08-03T06:53:07.999391+00:00"
+     "judged_at": "2026-08-03T08:40:51.536244+00:00"
     }
    }
   },
@@ -2872,12 +2925,15 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "The audit explicitly identified the two S&P 500 chart images carrying generic alt text 'Chart 1' and 'Chart 2'."
+       "matched_barrier_indexes": [
+        0
+       ],
+       "note": "Barrier 0 correctly identifies the two chart images having generic alt text ('Chart 1', 'Chart 2') preventing screen reader users from accessing the chart data."
       }
      ],
      "extra_count": 16,
      "group": "blind",
-     "judged_at": "2026-08-03T06:53:07.999391+00:00"
+     "judged_at": "2026-08-03T08:40:51.536244+00:00"
     }
    }
   },
@@ -3070,12 +3126,17 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "The audit explicitly identifies the image-click CAPTCHA lacking a text alternative and a non-visual/keyboard interaction path in multiple barriers."
+       "matched_barrier_indexes": [
+        0,
+        1,
+        2
+       ],
+       "note": "The audit identifies that the image-click CAPTCHA lacks an adequate alt text/text alternative, lacks audio/non-visual equivalents, and lacks a non-visual or keyboard interaction path."
       }
      ],
      "extra_count": 10,
      "group": "blind",
-     "judged_at": "2026-08-03T06:54:08.287591+00:00"
+     "judged_at": "2026-08-03T08:40:55.679630+00:00"
     }
    }
   },
@@ -3287,12 +3348,15 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "Surfaced in the barrier describing gallery and studio photographs having empty or generic alt attributes, leaving visual information about rentable spaces unavailable."
+       "matched_barrier_indexes": [
+        8
+       ],
+       "note": "Barrier 8 describes the event-space/studio photos having empty or non-descriptive alt text."
       }
      ],
      "extra_count": 16,
      "group": "blind",
-     "judged_at": "2026-08-03T06:55:06.664679+00:00"
+     "judged_at": "2026-08-03T08:40:59.314325+00:00"
     }
    }
   },
@@ -3469,12 +3533,13 @@
       {
        "gt_friction_index": 0,
        "surfaced": false,
-       "note": "None of the audit barriers mention missing confirmation/feedback or live region updates when adding an item to the cart."
+       "matched_barrier_indexes": [],
+       "note": "The audit does not report the lack of VoiceOver confirmation when adding an item to the cart."
       }
      ],
      "extra_count": 13,
      "group": "blind",
-     "judged_at": "2026-08-03T06:56:14.808564+00:00"
+     "judged_at": "2026-08-03T08:41:03.037213+00:00"
     }
    }
   },
@@ -3655,12 +3720,13 @@
       {
        "gt_friction_index": 0,
        "surfaced": false,
-       "note": "None of the audit barriers mention missing confirmation/feedback or live region updates when adding an item to the cart."
+       "matched_barrier_indexes": [],
+       "note": "The audit does not report the lack of VoiceOver confirmation when adding an item to the cart."
       }
      ],
      "extra_count": 13,
      "group": "blind",
-     "judged_at": "2026-08-03T06:56:14.808564+00:00"
+     "judged_at": "2026-08-03T08:41:03.037213+00:00"
     }
    }
   },
@@ -3864,12 +3930,15 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "The barrier describing unavailable sizes indicated only via CSS class on the wrapper (`sold-out`) with no `aria-disabled`, `disabled`, or text equivalent directly matches the expected friction."
+       "matched_barrier_indexes": [
+        2
+       ],
+       "note": "Barrier 2 correctly identifies that unavailable sizes are indicated only via CSS classes and lack accessible attributes/text to inform screen-reader users."
       }
      ],
      "extra_count": 15,
      "group": "blind",
-     "judged_at": "2026-08-03T06:57:25.765704+00:00"
+     "judged_at": "2026-08-03T08:41:06.505224+00:00"
     }
    }
   },
@@ -4073,12 +4142,15 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "The barrier describing unavailable sizes indicated only via CSS class on the wrapper (`sold-out`) with no `aria-disabled`, `disabled`, or text equivalent directly matches the expected friction."
+       "matched_barrier_indexes": [
+        2
+       ],
+       "note": "Barrier 2 correctly identifies that unavailable sizes are indicated only via CSS classes and lack accessible attributes/text to inform screen-reader users."
       }
      ],
      "extra_count": 15,
      "group": "blind",
-     "judged_at": "2026-08-03T06:57:25.765704+00:00"
+     "judged_at": "2026-08-03T08:41:06.505224+00:00"
     }
    }
   },
@@ -4306,12 +4378,16 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "Surfaced by barriers mentioning the absence of landmark regions/roles and the presence of only a single heading, leaving screen reader users without navigable structure or landmarks."
+       "matched_barrier_indexes": [
+        1,
+        9
+       ],
+       "note": "Barrier 1 addresses the missing landmark regions and Barrier 9 addresses the lack of heading structure beyond a single page title heading."
       }
      ],
      "extra_count": 16,
      "group": "blind",
-     "judged_at": "2026-08-03T06:58:31.185469+00:00"
+     "judged_at": "2026-08-03T08:41:10.929810+00:00"
     }
    }
   },
@@ -4531,12 +4607,16 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "Surfaced by barriers mentioning the absence of landmark regions/roles and the presence of only a single heading, leaving screen reader users without navigable structure or landmarks."
+       "matched_barrier_indexes": [
+        1,
+        9
+       ],
+       "note": "Barrier 1 addresses the missing landmark regions and Barrier 9 addresses the lack of heading structure beyond a single page title heading."
       }
      ],
      "extra_count": 16,
      "group": "blind",
-     "judged_at": "2026-08-03T06:58:31.185469+00:00"
+     "judged_at": "2026-08-03T08:41:10.929810+00:00"
     }
    }
   },
@@ -4744,12 +4824,17 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "Surfaced by barriers describing the lack of heading elements, missing landmark regions, and emoji read before category names."
+       "matched_barrier_indexes": [
+        1,
+        2,
+        11
+       ],
+       "note": "Barriers 1, 2, and 11 cover the missing heading elements, missing landmark regions, and reading of emoji before subheadings respectively."
       }
      ],
      "extra_count": 14,
      "group": "blind",
-     "judged_at": "2026-08-03T06:59:28.120193+00:00"
+     "judged_at": "2026-08-03T08:41:14.736393+00:00"
     }
    }
   },
@@ -4938,12 +5023,17 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "Surfaced by barriers describing the lack of heading elements, missing landmark regions, and emoji read before category names."
+       "matched_barrier_indexes": [
+        1,
+        2,
+        11
+       ],
+       "note": "Barriers 1, 2, and 11 cover the missing heading elements, missing landmark regions, and reading of emoji before subheadings respectively."
       }
      ],
      "extra_count": 14,
      "group": "blind",
-     "judged_at": "2026-08-03T06:59:28.120193+00:00"
+     "judged_at": "2026-08-03T08:41:14.736393+00:00"
     }
    }
   },
@@ -5129,12 +5219,13 @@
       {
        "gt_friction_index": 0,
        "surfaced": false,
-       "note": "None of the audit barriers mention flavor names and their quantity buttons being separated or failing to fit in view together."
+       "matched_barrier_indexes": [],
+       "note": "None of the audit barriers mention the issue with flavor names and quantity buttons not fitting in view together at high magnification."
       }
      ],
      "extra_count": 6,
      "group": "low_vision",
-     "judged_at": "2026-08-03T07:00:30.796868+00:00"
+     "judged_at": "2026-08-03T08:41:19.091066+00:00"
     }
    }
   },
@@ -5320,12 +5411,13 @@
       {
        "gt_friction_index": 0,
        "surfaced": false,
-       "note": "None of the audit barriers mention flavor names and their quantity buttons being separated or failing to fit in view together."
+       "matched_barrier_indexes": [],
+       "note": "None of the audit barriers mention the issue with flavor names and quantity buttons not fitting in view together at high magnification."
       }
      ],
      "extra_count": 6,
      "group": "low_vision",
-     "judged_at": "2026-08-03T07:00:30.796868+00:00"
+     "judged_at": "2026-08-03T08:41:19.091066+00:00"
     }
    }
   },
@@ -5495,12 +5587,13 @@
       {
        "gt_friction_index": 0,
        "surfaced": false,
-       "note": "The audit does not mention horizontal flight-result rows or excessive magnified panning when reading flight options."
+       "matched_barrier_indexes": [],
+       "note": "None of the audit barriers mention long horizontal flight-result rows requiring excessive magnified panning."
       }
      ],
      "extra_count": 5,
      "group": "low_vision",
-     "judged_at": "2026-08-03T07:15:15.913584+00:00"
+     "judged_at": "2026-08-03T08:41:22.893535+00:00"
     }
    }
   },
@@ -5681,12 +5774,13 @@
       {
        "gt_friction_index": 0,
        "surfaced": false,
-       "note": "The audit does not mention the blocking popup with a small, low-contrast close button."
+       "matched_barrier_indexes": [],
+       "note": "None of the audited barriers report a blocking popup with a small, low-contrast close button."
       }
      ],
      "extra_count": 7,
      "group": "low_vision",
-     "judged_at": "2026-08-03T07:16:47.775297+00:00"
+     "judged_at": "2026-08-03T08:41:26.845455+00:00"
     }
    }
   },
@@ -5867,12 +5961,13 @@
       {
        "gt_friction_index": 0,
        "surfaced": false,
-       "note": "The audit does not mention the blocking popup with a small, low-contrast close button."
+       "matched_barrier_indexes": [],
+       "note": "None of the audited barriers report a blocking popup with a small, low-contrast close button."
       }
      ],
      "extra_count": 7,
      "group": "low_vision",
-     "judged_at": "2026-08-03T07:16:47.775297+00:00"
+     "judged_at": "2026-08-03T08:41:26.845455+00:00"
     }
    }
   },
@@ -6061,12 +6156,15 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "The audit explicitly mentions the remove-item '×' icon as a tiny control that is hard to see and hit under magnification."
+       "matched_barrier_indexes": [
+        1
+       ],
+       "note": "Audit barrier 1 directly addresses the small cart-item removal control being difficult to see and activate under magnification."
       }
      ],
      "extra_count": 5,
      "group": "low_vision",
-     "judged_at": "2026-08-03T07:17:46.176702+00:00"
+     "judged_at": "2026-08-03T08:41:30.223837+00:00"
     }
    }
   },
@@ -6247,12 +6345,13 @@
       {
        "gt_friction_index": 0,
        "surfaced": false,
-       "note": "The audit does not report the friction regarding map interactions updating the results panel outside the magnified viewport."
+       "matched_barrier_indexes": [],
+       "note": "None of the audit barriers describe map interactions updating results outside the magnified viewport causing panning between the map and panel."
       }
      ],
      "extra_count": 5,
      "group": "low_vision",
-     "judged_at": "2026-08-03T07:19:01.849106+00:00"
+     "judged_at": "2026-08-03T08:41:34.943817+00:00"
     }
    }
   },
@@ -6416,12 +6515,13 @@
       {
        "gt_friction_index": 0,
        "surfaced": false,
-       "note": "The audit does not report the friction regarding map interactions updating the results panel outside the magnified viewport."
+       "matched_barrier_indexes": [],
+       "note": "None of the audit barriers describe map interactions updating results outside the magnified viewport causing panning between the map and panel."
       }
      ],
      "extra_count": 5,
      "group": "low_vision",
-     "judged_at": "2026-08-03T07:19:01.849106+00:00"
+     "judged_at": "2026-08-03T08:41:34.943817+00:00"
     }
    }
   },
@@ -6627,12 +6727,13 @@
       {
        "gt_friction_index": 0,
        "surfaced": false,
-       "note": "None of the reported audit barriers address filter updates occurring outside the magnified viewport or requiring navigation away from the filter panel."
+       "matched_barrier_indexes": [],
+       "note": "None of the audit barriers describe filter updates happening outside the magnified viewport while interacting with the filter panel."
       }
      ],
      "extra_count": 7,
      "group": "low_vision",
-     "judged_at": "2026-08-03T07:02:20.290032+00:00"
+     "judged_at": "2026-08-03T08:41:39.146004+00:00"
     }
    }
   },
@@ -6785,12 +6886,15 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "The audit correctly identifies text sitting over rotating photo backgrounds resulting in unpredictable contrast."
+       "matched_barrier_indexes": [
+        0
+       ],
+       "note": "Barrier 0 describes banner text sitting over rotating photographic background images leading to unpredictable contrast, matching GT 0."
       }
      ],
      "extra_count": 5,
      "group": "low_vision",
-     "judged_at": "2026-08-03T07:03:07.078271+00:00"
+     "judged_at": "2026-08-03T08:41:45.764986+00:00"
     }
    }
   },
@@ -6966,12 +7070,15 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "The audit correctly identifies text sitting over rotating photo backgrounds resulting in unpredictable contrast."
+       "matched_barrier_indexes": [
+        0
+       ],
+       "note": "Barrier 0 describes banner text sitting over rotating photographic background images leading to unpredictable contrast, matching GT 0."
       }
      ],
      "extra_count": 5,
      "group": "low_vision",
-     "judged_at": "2026-08-03T07:03:07.078271+00:00"
+     "judged_at": "2026-08-03T08:41:45.764986+00:00"
     }
    }
   },
@@ -7172,12 +7279,13 @@
       {
        "gt_friction_index": 0,
        "surfaced": false,
-       "note": "The audit does not mention the low contrast / light text on light background with reversed hover colors on the homepage service-menu buttons."
+       "matched_barrier_indexes": [],
+       "note": "The audit does not report the low contrast light-on-light color scheme for the homepage service-menu buttons."
       }
      ],
      "extra_count": 8,
      "group": "low_vision",
-     "judged_at": "2026-08-03T07:04:26.086618+00:00"
+     "judged_at": "2026-08-03T08:41:51.000659+00:00"
     }
    }
   },
@@ -7350,12 +7458,13 @@
       {
        "gt_friction_index": 0,
        "surfaced": false,
-       "note": "None of the audit barriers mention hover popups or their dismissal during magnified panning."
+       "matched_barrier_indexes": [],
+       "note": "The issue regarding hover popup dismissal during magnified panning was not surfaced in the audit barriers."
       }
      ],
      "extra_count": 6,
      "group": "low_vision",
-     "judged_at": "2026-08-03T07:05:39.861728+00:00"
+     "judged_at": "2026-08-03T08:41:56.177763+00:00"
     }
    }
   },
@@ -7528,12 +7637,13 @@
       {
        "gt_friction_index": 0,
        "surfaced": false,
-       "note": "None of the audit barriers mention hover popups or their dismissal during magnified panning."
+       "matched_barrier_indexes": [],
+       "note": "The issue regarding hover popup dismissal during magnified panning was not surfaced in the audit barriers."
       }
      ],
      "extra_count": 6,
      "group": "low_vision",
-     "judged_at": "2026-08-03T07:05:39.861728+00:00"
+     "judged_at": "2026-08-03T08:41:56.177763+00:00"
     }
    }
   },
@@ -7735,12 +7845,15 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "The audit barrier describing top-level shopping categories relying on hover-revealed mega-menus captures the hover-only menu issue."
+       "matched_barrier_indexes": [
+        4
+       ],
+       "note": "Audit barrier 4 identifies hover-revealed mega-menus causing interaction issues."
       }
      ],
      "extra_count": 6,
      "group": "low_vision",
-     "judged_at": "2026-08-03T07:07:30.797278+00:00"
+     "judged_at": "2026-08-03T08:42:02.196245+00:00"
     }
    }
   },
@@ -7920,12 +8033,13 @@
       {
        "gt_friction_index": 0,
        "surfaced": false,
-       "note": "The audit barriers mention sticky headers, low contrast indicators, color selection states, icon buttons, and lazy-loaded thumbnails, but do not mention the auto-disappearing add-to-cart confirmation."
+       "matched_barrier_indexes": [],
+       "note": "None of the audit barriers mention the auto-dismissing/disappearing add-to-cart confirmation message."
       }
      ],
      "extra_count": 5,
      "group": "low_vision",
-     "judged_at": "2026-08-03T07:20:37.625754+00:00"
+     "judged_at": "2026-08-03T08:42:06.516899+00:00"
     }
    }
   },
@@ -8122,12 +8236,13 @@
       {
        "gt_friction_index": 0,
        "surfaced": false,
-       "note": "The audit barriers mention sticky headers, low contrast indicators, color selection states, icon buttons, and lazy-loaded thumbnails, but do not mention the auto-disappearing add-to-cart confirmation."
+       "matched_barrier_indexes": [],
+       "note": "None of the audit barriers mention the auto-dismissing/disappearing add-to-cart confirmation message."
       }
      ],
      "extra_count": 5,
      "group": "low_vision",
-     "judged_at": "2026-08-03T07:20:37.625754+00:00"
+     "judged_at": "2026-08-03T08:42:06.516899+00:00"
     }
    }
   },
@@ -8295,12 +8410,15 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "Barrier 6 describes homepage carousels auto-rotating without pause/stop controls, which matches the expected friction."
+       "matched_barrier_indexes": [
+        5
+       ],
+       "note": "Audit barrier 5 identifies the auto-rotating homepage carousels lacking a pause/stop control, matching the expected friction."
       }
      ],
      "extra_count": 6,
      "group": "low_vision",
-     "judged_at": "2026-08-03T07:09:06.057177+00:00"
+     "judged_at": "2026-08-03T08:42:10.460321+00:00"
     }
    }
   },
@@ -8468,12 +8586,15 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "Barrier 6 describes homepage carousels auto-rotating without pause/stop controls, which matches the expected friction."
+       "matched_barrier_indexes": [
+        5
+       ],
+       "note": "Audit barrier 5 identifies the auto-rotating homepage carousels lacking a pause/stop control, matching the expected friction."
       }
      ],
      "extra_count": 6,
      "group": "low_vision",
-     "judged_at": "2026-08-03T07:09:06.057177+00:00"
+     "judged_at": "2026-08-03T08:42:10.460321+00:00"
     }
    }
   },
@@ -8697,12 +8818,17 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "The audit identifies that the product pitch video lacks captions and a transcript across its barrier entries."
+       "matched_barrier_indexes": [
+        0,
+        1,
+        2
+       ],
+       "note": "Audit barriers 0, 1, and 2 all directly relate to the campaign product video lacking captions, caption tracks, and an accessible text transcript."
       }
      ],
      "extra_count": 0,
      "group": "dhh",
-     "judged_at": "2026-08-03T07:10:42.870465+00:00"
+     "judged_at": "2026-08-03T08:42:16.067523+00:00"
     }
    }
   },
@@ -8931,12 +9057,17 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "The audit identifies that the product pitch video lacks captions and a transcript across its barrier entries."
+       "matched_barrier_indexes": [
+        0,
+        1,
+        2
+       ],
+       "note": "Audit barriers 0, 1, and 2 all directly relate to the campaign product video lacking captions, caption tracks, and an accessible text transcript."
       }
      ],
      "extra_count": 0,
      "group": "dhh",
-     "judged_at": "2026-08-03T07:10:42.870465+00:00"
+     "judged_at": "2026-08-03T08:42:16.067523+00:00"
     }
    }
   },
@@ -9141,12 +9272,17 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "The audit explicitly identifies both the missing caption track on the keynote video and the absence of a transcript."
+       "matched_barrier_indexes": [
+        0,
+        1,
+        2
+       ],
+       "note": "The audit barriers cover the missing caption track, missing transcript, and lack of caption information for the keynote presentation video."
       }
      ],
-     "extra_count": 1,
+     "extra_count": 0,
      "group": "dhh",
-     "judged_at": "2026-08-03T07:11:56.793782+00:00"
+     "judged_at": "2026-08-03T08:42:21.935346+00:00"
     }
    }
   },
@@ -9345,12 +9481,17 @@
       {
        "gt_friction_index": 0,
        "surfaced": true,
-       "note": "The audit explicitly identifies both the missing caption track on the keynote video and the absence of a transcript."
+       "matched_barrier_indexes": [
+        0,
+        1,
+        2
+       ],
+       "note": "The audit barriers cover the missing caption track, missing transcript, and lack of caption information for the keynote presentation video."
       }
      ],
-     "extra_count": 1,
+     "extra_count": 0,
      "group": "dhh",
-     "judged_at": "2026-08-03T07:11:56.793782+00:00"
+     "judged_at": "2026-08-03T08:42:21.935346+00:00"
     }
    }
   },
@@ -9887,12 +10028,13 @@
       {
        "gt_friction_index": 0,
        "surfaced": false,
-       "note": "The audit barrier discusses contact routes (phone call/callback) rather than timer notifications in background tabs."
+       "matched_barrier_indexes": [],
+       "note": "The audit does not report the timer background tab notification issue, focusing instead on contact options."
       }
      ],
      "extra_count": 1,
      "group": "dhh",
-     "judged_at": "2026-08-03T07:13:10.316383+00:00"
+     "judged_at": "2026-08-03T08:42:24.905589+00:00"
     }
    }
   },
