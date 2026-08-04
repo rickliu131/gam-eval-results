@@ -1,6 +1,6 @@
 {
  "round": "r8-kb3-full",
- "generated_at": "2026-08-03T16:21:32.917926+00:00",
+ "generated_at": "2026-08-04T02:47:19.972459+00:00",
  "metrics": {
   "overall": {
    "cases_tested": 62,
@@ -10798,6 +10798,178 @@
     "verdict": "fail",
     "rationale": "GAM completely missed the expected accessibility friction regarding the adjacent CLEAR ALL button on ASOS. As a result, no repairs, reports, or motor interaction patterns were generated."
    },
+   "ablation": null
+  },
+  {
+   "recording_id": "no recording ingested",
+   "pathway": null,
+   "pathway_description": "",
+   "case_id": "blind:dignitary-pdx",
+   "user_group": "blind",
+   "category": "Alt text issues (rec + report)",
+   "example_name": "The Dignitary",
+   "session": {
+    "conversation_id": "",
+    "status": "no_recording"
+   },
+   "gt": {
+    "frictions": [
+     {
+      "description": "About Us images carry filename-derived labels such as 'Image by DaYsO' and a logo filename, which sound meaningful but convey nothing about the restaurant.",
+      "severity_score": 1,
+      "severity_basis": "documented"
+     }
+    ],
+    "expected_interventions": {
+     "report": true,
+     "mode": "recommendation",
+     "items": [
+      {
+       "type": "voiceover_image_descriptions",
+       "description": "Turn on Image Descriptions in VoiceOver Utility, then use VO+Command+L on an image to hear a description."
+      }
+     ]
+    },
+    "expected_patterns": {
+     "access_context": "nonvisual access (blind)",
+     "assistive_technology": "VoiceOver screen reader"
+    },
+    "notes": ""
+   },
+   "inferred": {
+    "frictions": [],
+    "patterns": []
+   },
+   "judge": null,
+   "ablation": null
+  },
+  {
+   "recording_id": "no recording ingested",
+   "pathway": null,
+   "pathway_description": "",
+   "case_id": "dhh:ted",
+   "user_group": "dhh",
+   "category": "Speech content has no captions or transcript at all.",
+   "example_name": "TED talk",
+   "session": {
+    "conversation_id": "",
+    "status": "no_recording"
+   },
+   "gt": {
+    "frictions": [
+     {
+      "description": "The talk's player offers no subtitle track at all — the subtitles menu shows only 'Disable subtitles' with no language options — so the spoken content has no text alternative.",
+      "severity_score": 3,
+      "severity_basis": "derived"
+     }
+    ],
+    "expected_interventions": {
+     "report": true,
+     "mode": "recommendation",
+     "items": [
+      {
+       "type": "live_captions",
+       "description": "Use macOS Live Captions as a temporary aid while the report notes that the publisher should provide captions or a transcript."
+      }
+     ]
+    },
+    "expected_patterns": {
+     "access_context": "hearing access / text access to audio",
+     "assistive_technology": "macOS Live Captions"
+    },
+    "notes": "Subtitle menu verified 2026-08-02 (screenshot): 'Subtitles: Disabled' with no other option. No recording yet."
+   },
+   "inferred": {
+    "frictions": [],
+    "patterns": []
+   },
+   "judge": null,
+   "ablation": null
+  },
+  {
+   "recording_id": "no recording ingested",
+   "pathway": null,
+   "pathway_description": "",
+   "case_id": "dhh:apple-tv-sdh",
+   "user_group": "dhh",
+   "category": "Captions exist but fail the users.",
+   "example_name": "Apple TV SDH",
+   "session": {
+    "conversation_id": "",
+    "status": "no_recording"
+   },
+   "gt": {
+    "frictions": [
+     {
+      "description": "An available SDH track is absent from the playback subtitle menu until the macOS preference for closed captions and SDH is enabled.",
+      "severity_score": 1,
+      "severity_basis": "documented"
+     }
+    ],
+    "expected_interventions": {
+     "report": false,
+     "mode": "recommendation",
+     "items": [
+      {
+       "type": "prefer_captions_and_sdh",
+       "description": "Enable Prefer Closed Captions and SDH in System Settings so SDH tracks appear during playback."
+      }
+     ]
+    },
+    "expected_patterns": {
+     "access_context": "hearing access / text access to audio",
+     "assistive_technology": "macOS Live Captions"
+    },
+    "notes": ""
+   },
+   "inferred": {
+    "frictions": [],
+    "patterns": []
+   },
+   "judge": null,
+   "ablation": null
+  },
+  {
+   "recording_id": "no recording ingested",
+   "pathway": null,
+   "pathway_description": "",
+   "case_id": "dhh:apple-tv-lang",
+   "user_group": "dhh",
+   "category": "Captions exist but fail the users.",
+   "example_name": "Apple TV caption language",
+   "session": {
+    "conversation_id": "",
+    "status": "no_recording"
+   },
+   "gt": {
+    "frictions": [
+     {
+      "description": "Caption tracks default to a language that does not match the user's system language, requiring repeated manual selection.",
+      "severity_score": 1,
+      "severity_basis": "documented"
+     }
+    ],
+    "expected_interventions": {
+     "report": false,
+     "mode": "recommendation",
+     "items": [
+      {
+       "type": "caption_language_preferences",
+       "description": "Enable Prefer Closed Captions and SDH and put the preferred language first in Language & Region so Apple TV selects matching captions."
+      }
+     ]
+    },
+    "expected_patterns": {
+     "access_context": "hearing access / text access to audio",
+     "assistive_technology": "macOS Live Captions"
+    },
+    "notes": ""
+   },
+   "inferred": {
+    "frictions": [],
+    "patterns": []
+   },
+   "judge": null,
    "ablation": null
   }
  ]

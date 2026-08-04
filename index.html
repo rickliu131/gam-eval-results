@@ -133,7 +133,7 @@ function frictionGrid(it) {
     } else gamCell = `${chip("missed", "no")}${r?.note ? ` <span class="meta">${esc(r.note)}</span>` : ""}`;
     // LLM-only cell: matched barrier highlighted, or a miss chip.
     let ablCell;
-    if (!abl) ablCell = chip(group === "motor" ? "n/a" : "not run", "na");
+    if (!abl) ablCell = chip("not auditable — counted as missed", "no");
     else {
       const ar = ablJr.find(x => x.gt_friction_index === i);
       if (ar && ar.surfaced) {
@@ -193,7 +193,7 @@ function gamColumn(it) {
 
 function ablColumn(it) {
   const a = it.ablation;
-  if (!a) return `<div class="col"><h4>LLM-only baseline (Opus 5)</h4><div class="empty">${it.user_group && it.gt && (it.gt.expected_patterns||{}) && (itIsWeb(it) ? "not run yet" : "N/A — non-web example (baseline needs page HTML)")}</div></div>`;
+  if (!a) return `<div class="col"><h4>LLM-only baseline (Opus 5)</h4><div class="empty">not auditable (no page capture / non-web) — all GT frictions counted as missed for the baseline</div></div>`;
   const group = it.user_group === "low_vision" ? "low_vision" : it.user_group;
   const barriers = ((a.barriers || {})[group] || []).map(b => `<div class="blockcard">${esc(b.description || b)}</div>`).join("");
   const judged = a.judged || {};
