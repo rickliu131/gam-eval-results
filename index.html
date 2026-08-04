@@ -102,7 +102,7 @@ function stats(m, abl) {
   const ablRows = ordered(a).map(([g, b]) =>
     `<tr><th>LLM-only · ${esc(g)}</th>${ablCells(b)}</tr>`).join("");
   const ablNote = a.overall
-    ? `<div class="meta" style="margin-top:6px">LLM-only baseline = static page audit (Opus 5, page HTML + accessibility tree + standards; no interaction data). Non-web / uncaptured cases count as 0 surfaced. ${a.overall.barriers_per_case ?? "?"} barriers listed /case; ${a.overall.cases_audited ?? "?"} of ${a.overall.cases_counted ?? "?"} cases auditable.</div>`
+    ? `<div class="meta" style="margin-top:6px">LLM-only baseline = static page audit (Opus 5, page HTML + accessibility tree + standards; no interaction data), counted per recording on the same ${a.overall.recordings_counted ?? "?"} tested recordings as GAM: a case-level audit verdict applies to every recording of that case; non-web / uncaptured cases count as 0 surfaced. ${a.overall.barriers_per_case ?? "?"} barriers listed per recording; ${a.overall.recordings_audited ?? "?"} of ${a.overall.recordings_counted ?? "?"} recordings covered by an audit.</div>`
     : "";
   document.getElementById("groupstats").innerHTML = (gamRows || ablOverall)
     ? `<table><tr><th></th>${METRICS.map(([,l])=>`<th>${esc(l)}</th>`).join("")}</tr>${gamRows}${ablOverall}${ablRows}</table>${ablNote}` : "";
