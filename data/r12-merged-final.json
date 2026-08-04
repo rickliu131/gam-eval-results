@@ -1,6 +1,6 @@
 {
  "round": "r12-merged-final",
- "generated_at": "2026-08-04T06:53:53.764438+00:00",
+ "generated_at": "2026-08-04T07:03:57.076935+00:00",
  "metrics": {
   "overall": {
    "cases_tested": 62,
@@ -12270,6 +12270,28 @@
    },
    "judge": null,
    "ablation": null
+  }
+ ],
+ "comparison_notes": [
+  {
+   "group": "blind",
+   "text": "Recall is identical (91.3% vs 91.3%): both systems surface the same 21 of 23 and miss only the Walmart add-to-cart announcement — a dynamic barrier invisible to the static audit and (so far) to GAM. The separation is precision: 91.3% vs 9.8%, ≈14.09 unmatched barriers listed per recording by the audit. Barrier classes that would separate recall (focus management, ARIA that lies about state, silent dynamic updates, reading order) are not yet in the dataset."
+  },
+  {
+   "group": "low_vision",
+   "text": "The clearest observational advantage: 73.7% vs 31.6% recall. Magnifier-viewport misses, hover dismissal, panning cost, and zoom-conditional layout failures are properties of the interaction and have no markup signature for an audit to find."
+  },
+  {
+   "group": "dhh",
+   "text": "Narrow problem space, split verdict: on caption cases the static audit is accurate and terse (precision 92.3%), but it is structurally blind to sound-cue events with no visual counterpart — GAM 50.0% vs 40.0% recall overall."
+  },
+  {
+   "group": "motor",
+   "text": "GAM 33.3% recall at 80.0% precision vs 16.7% at 4.5%. A static audit can name rule-level candidates (it flagged Booking's missing drag alternative, WCAG 2.5.7) but mis-localizes them (on Reddit it flagged small targets on the search close icon — not the upvote controls the user fought) and cannot see friction evidence at all (Gmail time pressure, ASOS accidental activations). Pages typing is a native app — nothing to audit."
+  },
+  {
+   "group": "overall",
+   "text": "The audit enumerates what could be wrong (~8.6 barriers per recording at 10.3% precision); observation determines what actually blocked this user (88.0% precision) and is what makes the n/a columns — intervention mode, personalized repair, evidenced report — possible at all."
   }
  ]
 }
