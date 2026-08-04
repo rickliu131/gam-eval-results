@@ -234,7 +234,7 @@ function itemHtml(it) {
 }
 
 async function loadRound(file) {
-  const data = await (await fetch("data/" + file)).json();
+  const data = await (await fetch("data/" + file + "?v=" + Date.now(), {cache: "no-store"})).json();
   stats(data.metrics, data.ablation_metrics);
   document.getElementById("meta").textContent =
     `${data.items.length} recordings · GT ${data.ground_truth_version} · built ${String(data.generated_at).slice(0,16)}`;
@@ -255,7 +255,7 @@ async function loadRound(file) {
 }
 
 (async () => {
-  const manifest = await (await fetch("data/index.json")).json();
+  const manifest = await (await fetch("data/index.json?v=" + Date.now(), {cache: "no-store"})).json();
   const sel = document.getElementById("round");
   manifest.rounds.forEach(r => sel.insertAdjacentHTML("beforeend",
     `<option value="${esc(r.file)}">${esc(r.round)} (${esc(String(r.generated_at).slice(0,10))})</option>`));
