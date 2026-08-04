@@ -1,6 +1,6 @@
 {
  "round": "r12-merged-final",
- "generated_at": "2026-08-04T06:24:44.689609+00:00",
+ "generated_at": "2026-08-04T06:50:11.514067+00:00",
  "metrics": {
   "overall": {
    "cases_tested": 62,
@@ -127,12 +127,12 @@
  },
  "ablation_metrics": {
   "overall": {
-   "friction_recall": 0.4844,
-   "precision": 0.1084,
-   "barriers_per_case": 7.9,
-   "extra_frictions_per_case": 7.03,
+   "friction_recall": 0.5156,
+   "precision": 0.1032,
+   "barriers_per_case": 8.6,
+   "extra_frictions_per_case": 7.71,
    "recordings_counted": 62,
-   "recordings_audited": 47
+   "recordings_audited": 55
   },
   "low_vision": {
    "friction_recall": 0.3158,
@@ -151,12 +151,12 @@
    "recordings_audited": 5
   },
   "motor": {
-   "friction_recall": 0.0,
-   "precision": 0.0,
-   "barriers_per_case": 0.0,
-   "extra_frictions_per_case": 0.0,
+   "friction_recall": 0.1667,
+   "precision": 0.0455,
+   "barriers_per_case": 4.4,
+   "extra_frictions_per_case": 4.2,
    "recordings_counted": 10,
-   "recordings_audited": 0
+   "recordings_audited": 8
   },
   "blind": {
    "friction_recall": 0.913,
@@ -554,7 +554,118 @@
     "verdict": "fail",
     "rationale": "The only ground-truth friction (small upvote/downvote targets causing repeated off-target clicks) was not surfaced; GAM inferred zero frictions for the session. No repair or report finding covers the expected target-size issue, so the case was essentially missed entirely."
    },
-   "ablation": null
+   "ablation": {
+    "case_id": "motor:reddit",
+    "model": "claude-opus-5",
+    "generated_at": "2026-08-04T06:44:32.807252+00:00",
+    "source_capture": "motor - Small targets - Reddit - pathway 1/web/page_0001_www.reddit.com",
+    "barriers": {
+     "blind": [
+      {
+       "description": "The core content – the four-picture puzzle – is rendered by a third-party Devvit web view (`devvit2-surface`/`devvit2-custom-post` pointing to four-pics-game-…webview.devvit.net) whose image URLs are only supplied in a JSON blob with no alt text, so screen-reader users get no text alternative for the images they are asked to identify.",
+       "wcag": "1.1.1"
+      },
+      {
+       "description": "The banner and navigation landmarks expose inline script text as their accessible name (\"Open menu SML.load([\\\"8mAt_CUDml\\\"…\") and the `main` landmark's name is likewise a long `SML.load([...])` string, flooding landmark navigation with meaningless text.",
+       "wcag": "4.1.2"
+      },
+      {
+       "description": "There are two `h1` elements in the main region – the post title `h1` and a visually hidden `h1` \"Comments Section\" – so the document outline misrepresents page structure for heading navigation.",
+       "wcag": "1.3.1"
+      },
+      {
+       "description": "Each comment uses `<details role=\"article\">` with a `<summary tabindex=\"0\">`, which overrides the native disclosure semantics so the expanded/collapsed state of a comment thread is not conveyed to assistive technology.",
+       "wcag": "4.1.2"
+      },
+      {
+       "description": "The comment collapse control is a decorative `div class=\"…threadline-strip\" aria-hidden=\"true\"` with only `cursor-pointer`, so collapsing/expanding a thread is unavailable to screen-reader and keyboard users.",
+       "wcag": "2.1.1"
+      },
+      {
+       "description": "Author and community links carry `aria-haspopup=\"dialog\" aria-expanded=\"false\"` but the associated `faceplate-hovercard` is declared `mouse-only`, so the promised dialog can never be opened by a screen-reader/keyboard user.",
+       "wcag": "4.1.2"
+      },
+      {
+       "description": "The \"automated account\" indicator is a `<span role=\"button\" aria-label=\"This is an automated account.\">` with no `tabindex`, so it is announced as an operable button that cannot be focused or activated.",
+       "wcag": "2.1.1"
+      },
+      {
+       "description": "The puzzle hint is wrapped in `<shreddit-spoiler embed-obscured=\"\">` with no role, state, or accessible reveal control, so the hidden answer text is exposed to screen readers with no indication that it is obscured.",
+       "wcag": "1.3.1"
+      },
+      {
+       "description": "The search scope chip hides its label from AT (`<span aria-hidden=\"true\">r/4pics1word</span>`) and its remove control is a bare 12px `close` SVG with no accessible name, so screen-reader users cannot tell what the chip is or that it can be removed.",
+       "wcag": "1.1.1"
+      },
+      {
+       "description": "The comments-page ad renders several `shreddit-dynamic-ad-link` overlays with no text (credit-bar whitespace, cta whitespace, media) and one explicitly set to `disable-keyboard-nav=\"true\"`, producing unnamed/unreachable links around the same advertisement.",
+       "wcag": "2.4.4"
+      },
+      {
+       "description": "An `aria-live=\"assertive\" aria-atomic=\"true\"` outlet repeats the whole page title (\"Prove your word skills… : r/4pics1word\"), interrupting whatever the screen reader is currently reading.",
+       "wcag": "4.1.3"
+      }
+     ],
+     "low_vision": [
+      {
+       "description": "The header is `position: fixed` (`reddit-header-large … top-0 start-0 end-0 fixed`) over a fixed-width layout (`m:w-[1120px]`, `grid-cols-[minmax(0,756px)_minmax(0,316px)]`), so at 400% zoom the sticky bar consumes the viewport and the two-column content requires two-dimensional scrolling.",
+       "wcag": "1.4.10"
+      },
+      {
+       "description": "Metadata that carries meaning – timestamps (`11d ago`), \"Promoted\", flair \"Jul 22 | Puzzle 133\", and puzzle stats captions – is rendered at 12px in `text-neutral-content-weak`/`text-secondary-weak` tones, giving insufficient contrast for low-vision readers.",
+       "wcag": "1.4.3"
+      },
+      {
+       "description": "Icon-only controls (hamburger, chat, inbox, advertise, overflow \"…\") expose their purpose only through `rpl-tooltip` content shown on hover/focus, which is easy to miss or lose off-screen when magnified and cannot be persistently displayed.",
+       "wcag": "1.4.13"
+      },
+      {
+       "description": "The custom post is embedded with a hard-coded height (`postStyles.heightPixels: 512`) inside its own scroll container, so magnified users must scroll the inner game frame separately and content can be clipped.",
+       "wcag": "1.4.4"
+      },
+      {
+       "description": "Author/community hovercards open after a 500 ms hover delay and close 150 ms after the pointer leaves (`enter-delay=\"500\" leave-delay=\"150\" mouse-only`), making the additional content hard to reach and keep visible when using screen magnification.",
+       "wcag": "1.4.13"
+      }
+     ],
+     "dhh": [],
+     "motor": [
+      {
+       "description": "Several activation targets are far below the minimum size, e.g. the 12×12 px chip-remove `close` icon in the search bar and the 16 px overflow (\"…\") buttons on the post and comments.",
+       "wcag": "2.5.8"
+      },
+      {
+       "description": "Collapsing a comment relies on the narrow 24px-wide `threadline-strip` overlay (`w-[24px] xs:w-xl`, aria-hidden) with no keyboard or larger alternative, requiring precise pointer control.",
+       "wcag": "2.5.8"
+      },
+      {
+       "description": "Author/community detail cards are `mouse-only` hovercards with short enter/leave delays, so users who cannot hold a stable hover (or use keyboard-only input) cannot access that content.",
+       "wcag": "2.1.1"
+      },
+      {
+       "description": "The comment composer's editable region uses `tabindex=\"1\"`, a positive tab index that pulls it out of the natural document order and makes sequential keyboard navigation unpredictable.",
+       "wcag": "2.4.3"
+      },
+      {
+       "description": "Ad links are duplicated as invisible full-area overlays (`class=\"absolute inset-0\"`, `click-location=\"background\"`) with one marked `disable-keyboard-nav=\"true\"`, so pointer users can trigger the ad accidentally while keyboard users cannot reach it.",
+       "wcag": "2.1.1"
+      }
+     ]
+    },
+    "judged": {
+     "friction_results": [
+      {
+       "gt_friction_index": 0,
+       "surfaced": false,
+       "matched_barrier_indexes": [],
+       "note": "The audit mentions small target sizes for the search bar close icon and overflow buttons, but does not identify the small upvote and downvote targets."
+      }
+     ],
+     "extra_count": 5,
+     "group": "motor",
+     "judged_at": "2026-08-04T06:44:38.725599+00:00"
+    }
+   }
   },
   {
    "recording_id": "motor - Small targets - Reddit - pathway 2",
@@ -623,7 +734,118 @@
     "verdict": "fail",
     "rationale": "The single ground-truth friction (small voting targets causing off-target clicks) was never surfaced, no repair/recommendation was produced, and the developer report contains no finding for the issue. The session also failed to record any motor interaction pattern, so essentially none of the expected outputs were delivered."
    },
-   "ablation": null
+   "ablation": {
+    "case_id": "motor:reddit",
+    "model": "claude-opus-5",
+    "generated_at": "2026-08-04T06:44:32.807252+00:00",
+    "source_capture": "motor - Small targets - Reddit - pathway 1/web/page_0001_www.reddit.com",
+    "barriers": {
+     "blind": [
+      {
+       "description": "The core content – the four-picture puzzle – is rendered by a third-party Devvit web view (`devvit2-surface`/`devvit2-custom-post` pointing to four-pics-game-…webview.devvit.net) whose image URLs are only supplied in a JSON blob with no alt text, so screen-reader users get no text alternative for the images they are asked to identify.",
+       "wcag": "1.1.1"
+      },
+      {
+       "description": "The banner and navigation landmarks expose inline script text as their accessible name (\"Open menu SML.load([\\\"8mAt_CUDml\\\"…\") and the `main` landmark's name is likewise a long `SML.load([...])` string, flooding landmark navigation with meaningless text.",
+       "wcag": "4.1.2"
+      },
+      {
+       "description": "There are two `h1` elements in the main region – the post title `h1` and a visually hidden `h1` \"Comments Section\" – so the document outline misrepresents page structure for heading navigation.",
+       "wcag": "1.3.1"
+      },
+      {
+       "description": "Each comment uses `<details role=\"article\">` with a `<summary tabindex=\"0\">`, which overrides the native disclosure semantics so the expanded/collapsed state of a comment thread is not conveyed to assistive technology.",
+       "wcag": "4.1.2"
+      },
+      {
+       "description": "The comment collapse control is a decorative `div class=\"…threadline-strip\" aria-hidden=\"true\"` with only `cursor-pointer`, so collapsing/expanding a thread is unavailable to screen-reader and keyboard users.",
+       "wcag": "2.1.1"
+      },
+      {
+       "description": "Author and community links carry `aria-haspopup=\"dialog\" aria-expanded=\"false\"` but the associated `faceplate-hovercard` is declared `mouse-only`, so the promised dialog can never be opened by a screen-reader/keyboard user.",
+       "wcag": "4.1.2"
+      },
+      {
+       "description": "The \"automated account\" indicator is a `<span role=\"button\" aria-label=\"This is an automated account.\">` with no `tabindex`, so it is announced as an operable button that cannot be focused or activated.",
+       "wcag": "2.1.1"
+      },
+      {
+       "description": "The puzzle hint is wrapped in `<shreddit-spoiler embed-obscured=\"\">` with no role, state, or accessible reveal control, so the hidden answer text is exposed to screen readers with no indication that it is obscured.",
+       "wcag": "1.3.1"
+      },
+      {
+       "description": "The search scope chip hides its label from AT (`<span aria-hidden=\"true\">r/4pics1word</span>`) and its remove control is a bare 12px `close` SVG with no accessible name, so screen-reader users cannot tell what the chip is or that it can be removed.",
+       "wcag": "1.1.1"
+      },
+      {
+       "description": "The comments-page ad renders several `shreddit-dynamic-ad-link` overlays with no text (credit-bar whitespace, cta whitespace, media) and one explicitly set to `disable-keyboard-nav=\"true\"`, producing unnamed/unreachable links around the same advertisement.",
+       "wcag": "2.4.4"
+      },
+      {
+       "description": "An `aria-live=\"assertive\" aria-atomic=\"true\"` outlet repeats the whole page title (\"Prove your word skills… : r/4pics1word\"), interrupting whatever the screen reader is currently reading.",
+       "wcag": "4.1.3"
+      }
+     ],
+     "low_vision": [
+      {
+       "description": "The header is `position: fixed` (`reddit-header-large … top-0 start-0 end-0 fixed`) over a fixed-width layout (`m:w-[1120px]`, `grid-cols-[minmax(0,756px)_minmax(0,316px)]`), so at 400% zoom the sticky bar consumes the viewport and the two-column content requires two-dimensional scrolling.",
+       "wcag": "1.4.10"
+      },
+      {
+       "description": "Metadata that carries meaning – timestamps (`11d ago`), \"Promoted\", flair \"Jul 22 | Puzzle 133\", and puzzle stats captions – is rendered at 12px in `text-neutral-content-weak`/`text-secondary-weak` tones, giving insufficient contrast for low-vision readers.",
+       "wcag": "1.4.3"
+      },
+      {
+       "description": "Icon-only controls (hamburger, chat, inbox, advertise, overflow \"…\") expose their purpose only through `rpl-tooltip` content shown on hover/focus, which is easy to miss or lose off-screen when magnified and cannot be persistently displayed.",
+       "wcag": "1.4.13"
+      },
+      {
+       "description": "The custom post is embedded with a hard-coded height (`postStyles.heightPixels: 512`) inside its own scroll container, so magnified users must scroll the inner game frame separately and content can be clipped.",
+       "wcag": "1.4.4"
+      },
+      {
+       "description": "Author/community hovercards open after a 500 ms hover delay and close 150 ms after the pointer leaves (`enter-delay=\"500\" leave-delay=\"150\" mouse-only`), making the additional content hard to reach and keep visible when using screen magnification.",
+       "wcag": "1.4.13"
+      }
+     ],
+     "dhh": [],
+     "motor": [
+      {
+       "description": "Several activation targets are far below the minimum size, e.g. the 12×12 px chip-remove `close` icon in the search bar and the 16 px overflow (\"…\") buttons on the post and comments.",
+       "wcag": "2.5.8"
+      },
+      {
+       "description": "Collapsing a comment relies on the narrow 24px-wide `threadline-strip` overlay (`w-[24px] xs:w-xl`, aria-hidden) with no keyboard or larger alternative, requiring precise pointer control.",
+       "wcag": "2.5.8"
+      },
+      {
+       "description": "Author/community detail cards are `mouse-only` hovercards with short enter/leave delays, so users who cannot hold a stable hover (or use keyboard-only input) cannot access that content.",
+       "wcag": "2.1.1"
+      },
+      {
+       "description": "The comment composer's editable region uses `tabindex=\"1\"`, a positive tab index that pulls it out of the natural document order and makes sequential keyboard navigation unpredictable.",
+       "wcag": "2.4.3"
+      },
+      {
+       "description": "Ad links are duplicated as invisible full-area overlays (`class=\"absolute inset-0\"`, `click-location=\"background\"`) with one marked `disable-keyboard-nav=\"true\"`, so pointer users can trigger the ad accidentally while keyboard users cannot reach it.",
+       "wcag": "2.1.1"
+      }
+     ]
+    },
+    "judged": {
+     "friction_results": [
+      {
+       "gt_friction_index": 0,
+       "surfaced": false,
+       "matched_barrier_indexes": [],
+       "note": "The audit mentions small target sizes for the search bar close icon and overflow buttons, but does not identify the small upvote and downvote targets."
+      }
+     ],
+     "extra_count": 5,
+     "group": "motor",
+     "judged_at": "2026-08-04T06:44:38.725599+00:00"
+    }
+   }
   },
   {
    "recording_id": "motor - Dragging - Booking - pathway 1",
@@ -720,7 +942,108 @@
     "verdict": "pass",
     "rationale": "The single ground-truth friction (drag-only budget filter) was surfaced with matching severity (2); GAM's repair provides the expected non-drag numeric alternative, the report covers the friction with a sensible mitigation, and the interaction pattern matches the motor drag context."
    },
-   "ablation": null
+   "ablation": {
+    "case_id": "motor:booking",
+    "model": "claude-opus-5",
+    "generated_at": "2026-08-04T06:46:01.005968+00:00",
+    "source_capture": "motor - Dragging - Booking - pathway 1/web/page_0001_www.booking.com",
+    "barriers": {
+     "blind": [
+      {
+       "description": "The \"Skip to main content\" link targets <div id=\"basiclayout\"></div>, which is empty, and the page exposes no main landmark (only banner, a \"Filters\" region and contentinfo), so screen-reader users cannot reliably jump to or locate the search results content.",
+       "wcag": "2.4.1 Bypass Blocks"
+      },
+      {
+       "description": "The skip-link wrapper <div class=\"bypass_menu\" tabindex=\"0\"> is itself focusable but has no role or accessible name, creating a silent, purposeless tab stop before the page content.",
+       "wcag": "4.1.2 Name, Role, Value"
+      },
+      {
+       "description": "A stray debug string, <div>Gog_sr_cc_less</div>, is the first content in <body> and is announced as meaningless page text to screen-reader users.",
+       "wcag": "1.3.1 Info and Relationships"
+      },
+      {
+       "description": "The cross-product navigation markup uses role=\"menubar\"/role=\"menuitem\" plus aria-owns on plain navigation links (Stays, Flights, Car rental…), so assistive technology announces an application menu and expects arrow-key menu behavior that the links do not implement.",
+       "wcag": "4.1.2 Name, Role, Value"
+      },
+      {
+       "description": "The page has no h1; headings begin at h2 (\"Filter by:\", \"Your budget (per night)\"), so heading navigation gives no top-level title for the search-results page.",
+       "wcag": "1.3.1 Info and Relationships"
+      },
+      {
+       "description": "The calendar's month navigation links have only the symbols \"«\" and \"»\" as their accessible names, giving no indication of previous/next month.",
+       "wcag": "2.4.4 Link Purpose (In Context)"
+      },
+      {
+       "description": "The dual price sliders both carry the same static aria-valuetext=\"10 - 800\" (inputs labelled \"Min.\" and \"Max.\"), so a screen-reader user hears an identical, non-updating value for either thumb and cannot tell what range is set.",
+       "wcag": "4.1.2 Name, Role, Value"
+      },
+      {
+       "description": "In the Bedrooms/Bathrooms filters the decrement/increment buttons are marked tabindex=\"-1\" aria-hidden=\"true\" and the current value <span class=\"e32aa465fd\" aria-hidden=\"true\">0</span> is hidden, so screen-reader users get no exposed stepper controls and only a bare aria-valuenow number without units.",
+       "wcag": "4.1.2 Name, Role, Value"
+      },
+      {
+       "description": "The \"More info\" icon button is nested inside the <label for=\":r1c:\"> of the smart-filter textarea, polluting the field's accessible name and making label activation ambiguous between focusing the textarea and triggering the info control.",
+       "wcag": "1.3.1 Info and Relationships"
+      },
+      {
+       "description": "An empty <div role=\"tooltip\"> exists with no accessible name and no aria-describedby association from the \"More info\" trigger, so the explanatory content is never conveyed to screen-reader users.",
+       "wcag": "1.3.1 Info and Relationships"
+      },
+      {
+       "description": "Two nested contentinfo landmarks are exposed (a wrapper div with role=\"contentinfo\" containing the <footer>), causing duplicated footer landmark announcements in landmark navigation.",
+       "wcag": "1.3.1 Info and Relationships"
+      },
+      {
+       "description": "The property search form is exposed only as role=\"region\" aria-label=\"Search properties\" rather than a search landmark, and the accessibility tree shows its date/occupancy controls collapsed into unnamed textboxes, making the primary search controls hard to find and identify.",
+       "wcag": "1.3.1 Info and Relationships"
+      }
+     ],
+     "low_vision": [
+      {
+       "description": "placeholder",
+       "wcag": "1.4.3 Contrast (Minimum)"
+      }
+     ],
+     "dhh": [],
+     "motor": [
+      {
+       "description": "The budget filter is a dual-thumb range control (two overlapping <input type=\"range\"> thumbs over 50 tick marks) whose thumbs sit at the same position at the extremes, demanding precise pointer dragging to set a price band.",
+       "wcag": "2.5.7 Dragging Movements"
+      },
+      {
+       "description": "The destination field's clear control is a 1em icon-only button (aria-label \"Clear\") inside the input, producing a target well under 24×24 CSS pixels next to the text field.",
+       "wcag": "2.5.8 Target Size (Minimum)"
+      },
+      {
+       "description": "Bedrooms/Bathrooms values can only be changed via a slider drag or the small aria-hidden +/- icon buttons, offering no robust large-target alternative for users with limited dexterity.",
+       "wcag": "2.5.8 Target Size (Minimum)"
+      },
+      {
+       "description": "The \"More info\" button is nested inside the textarea's <label>, so a slightly off pointer press hits the label and focuses the textarea instead of opening the info tooltip.",
+       "wcag": "2.5.8 Target Size (Minimum)"
+      },
+      {
+       "description": "Calendar day cells and the \"«\"/\"»\" month links in the date table are tiny, tightly packed targets, making date selection error-prone with pointer input.",
+       "wcag": "2.5.8 Target Size (Minimum)"
+      }
+     ]
+    },
+    "judged": {
+     "friction_results": [
+      {
+       "gt_friction_index": 0,
+       "surfaced": true,
+       "matched_barrier_indexes": [
+        0
+       ],
+       "note": "Audit barrier 0 correctly identifies the budget filter slider drag accessibility issue."
+      }
+     ],
+     "extra_count": 4,
+     "group": "motor",
+     "judged_at": "2026-08-04T06:46:04.672139+00:00"
+    }
+   }
   },
   {
    "recording_id": "motor - Dragging - Booking - pathway 2",
@@ -789,7 +1112,108 @@
     "verdict": "fail",
     "rationale": "The single ground-truth friction (drag-only budget slider causing imprecise manipulation) was not surfaced at all, and no repair/recommendation or report items were produced. With the core accessibility issue entirely missing, the case fails despite the recording being analyzed completely."
    },
-   "ablation": null
+   "ablation": {
+    "case_id": "motor:booking",
+    "model": "claude-opus-5",
+    "generated_at": "2026-08-04T06:46:01.005968+00:00",
+    "source_capture": "motor - Dragging - Booking - pathway 1/web/page_0001_www.booking.com",
+    "barriers": {
+     "blind": [
+      {
+       "description": "The \"Skip to main content\" link targets <div id=\"basiclayout\"></div>, which is empty, and the page exposes no main landmark (only banner, a \"Filters\" region and contentinfo), so screen-reader users cannot reliably jump to or locate the search results content.",
+       "wcag": "2.4.1 Bypass Blocks"
+      },
+      {
+       "description": "The skip-link wrapper <div class=\"bypass_menu\" tabindex=\"0\"> is itself focusable but has no role or accessible name, creating a silent, purposeless tab stop before the page content.",
+       "wcag": "4.1.2 Name, Role, Value"
+      },
+      {
+       "description": "A stray debug string, <div>Gog_sr_cc_less</div>, is the first content in <body> and is announced as meaningless page text to screen-reader users.",
+       "wcag": "1.3.1 Info and Relationships"
+      },
+      {
+       "description": "The cross-product navigation markup uses role=\"menubar\"/role=\"menuitem\" plus aria-owns on plain navigation links (Stays, Flights, Car rental…), so assistive technology announces an application menu and expects arrow-key menu behavior that the links do not implement.",
+       "wcag": "4.1.2 Name, Role, Value"
+      },
+      {
+       "description": "The page has no h1; headings begin at h2 (\"Filter by:\", \"Your budget (per night)\"), so heading navigation gives no top-level title for the search-results page.",
+       "wcag": "1.3.1 Info and Relationships"
+      },
+      {
+       "description": "The calendar's month navigation links have only the symbols \"«\" and \"»\" as their accessible names, giving no indication of previous/next month.",
+       "wcag": "2.4.4 Link Purpose (In Context)"
+      },
+      {
+       "description": "The dual price sliders both carry the same static aria-valuetext=\"10 - 800\" (inputs labelled \"Min.\" and \"Max.\"), so a screen-reader user hears an identical, non-updating value for either thumb and cannot tell what range is set.",
+       "wcag": "4.1.2 Name, Role, Value"
+      },
+      {
+       "description": "In the Bedrooms/Bathrooms filters the decrement/increment buttons are marked tabindex=\"-1\" aria-hidden=\"true\" and the current value <span class=\"e32aa465fd\" aria-hidden=\"true\">0</span> is hidden, so screen-reader users get no exposed stepper controls and only a bare aria-valuenow number without units.",
+       "wcag": "4.1.2 Name, Role, Value"
+      },
+      {
+       "description": "The \"More info\" icon button is nested inside the <label for=\":r1c:\"> of the smart-filter textarea, polluting the field's accessible name and making label activation ambiguous between focusing the textarea and triggering the info control.",
+       "wcag": "1.3.1 Info and Relationships"
+      },
+      {
+       "description": "An empty <div role=\"tooltip\"> exists with no accessible name and no aria-describedby association from the \"More info\" trigger, so the explanatory content is never conveyed to screen-reader users.",
+       "wcag": "1.3.1 Info and Relationships"
+      },
+      {
+       "description": "Two nested contentinfo landmarks are exposed (a wrapper div with role=\"contentinfo\" containing the <footer>), causing duplicated footer landmark announcements in landmark navigation.",
+       "wcag": "1.3.1 Info and Relationships"
+      },
+      {
+       "description": "The property search form is exposed only as role=\"region\" aria-label=\"Search properties\" rather than a search landmark, and the accessibility tree shows its date/occupancy controls collapsed into unnamed textboxes, making the primary search controls hard to find and identify.",
+       "wcag": "1.3.1 Info and Relationships"
+      }
+     ],
+     "low_vision": [
+      {
+       "description": "placeholder",
+       "wcag": "1.4.3 Contrast (Minimum)"
+      }
+     ],
+     "dhh": [],
+     "motor": [
+      {
+       "description": "The budget filter is a dual-thumb range control (two overlapping <input type=\"range\"> thumbs over 50 tick marks) whose thumbs sit at the same position at the extremes, demanding precise pointer dragging to set a price band.",
+       "wcag": "2.5.7 Dragging Movements"
+      },
+      {
+       "description": "The destination field's clear control is a 1em icon-only button (aria-label \"Clear\") inside the input, producing a target well under 24×24 CSS pixels next to the text field.",
+       "wcag": "2.5.8 Target Size (Minimum)"
+      },
+      {
+       "description": "Bedrooms/Bathrooms values can only be changed via a slider drag or the small aria-hidden +/- icon buttons, offering no robust large-target alternative for users with limited dexterity.",
+       "wcag": "2.5.8 Target Size (Minimum)"
+      },
+      {
+       "description": "The \"More info\" button is nested inside the textarea's <label>, so a slightly off pointer press hits the label and focuses the textarea instead of opening the info tooltip.",
+       "wcag": "2.5.8 Target Size (Minimum)"
+      },
+      {
+       "description": "Calendar day cells and the \"«\"/\"»\" month links in the date table are tiny, tightly packed targets, making date selection error-prone with pointer input.",
+       "wcag": "2.5.8 Target Size (Minimum)"
+      }
+     ]
+    },
+    "judged": {
+     "friction_results": [
+      {
+       "gt_friction_index": 0,
+       "surfaced": true,
+       "matched_barrier_indexes": [
+        0
+       ],
+       "note": "Audit barrier 0 correctly identifies the budget filter slider drag accessibility issue."
+      }
+     ],
+     "extra_count": 4,
+     "group": "motor",
+     "judged_at": "2026-08-04T06:46:04.672139+00:00"
+    }
+   }
   },
   {
    "recording_id": "motor - Time sensitive - Gmail - pathway 1",
@@ -881,7 +1305,150 @@
     "verdict": "pass",
     "rationale": "The only ground-truth friction for motor:gmail was surfaced with matching severity, the repair intervention appropriately targets the toast dismissal so Undo remains operable, and the report includes a sensible developer mitigation. The motor access context is clear from the recording label and cursor-movement evidence."
    },
-   "ablation": null
+   "ablation": {
+    "case_id": "motor:gmail",
+    "model": "claude-opus-5",
+    "generated_at": "2026-08-04T06:48:09.289596+00:00",
+    "source_capture": "motor - Time sensitive - Gmail - pathway 1/web/page_0001_mail.google.com",
+    "barriers": {
+     "blind": [
+      {
+       "description": "The entire masthead is wrapped in `<h1 class=\"qp\">` so the page's only level-1 heading is announced as a run-on string (\"GmailSearchtabHelpTrainingSend feedback to GoogleUpgrade…Try Gemini\"), giving screen-reader users no meaningful page title landmark.",
+       "wcag": "1.3.1"
+      },
+      {
+       "description": "Per-row action controls are `<li class=\"bqX\">` items inside `<ul role=\"toolbar\">` with no role, accessible name, or tabindex, so the archive/snooze/delete/mark-read actions for each conversation are neither announced nor reachable.",
+       "wcag": "4.1.2"
+      },
+      {
+       "description": "Each conversation's subject/snippet is a `<div class=\"xS\" role=\"link\">` with no href and no tabindex, so the primary \"open this email\" control cannot be focused or activated by keyboard/screen-reader users.",
+       "wcag": "2.1.1"
+      },
+      {
+       "description": "Inside `<table role=\"grid\">` the checkbox and star cells (`td.oZ-x3`, `td.apU`) omit `role=\"gridcell\"`, breaking the grid structure so cell navigation and position reporting are unreliable.",
+       "wcag": "1.3.1"
+      },
+      {
+       "description": "Three simultaneous `role=\"main\"` panes (Inbox, Trash, Spam) each contain a duplicate `<h2>Conversations</h2>` and live text such as \"No conversations in Trash.\", \"Hooray, no spam here!\" and a focusable \"Empty Trash now\" button that are not aria-hidden, so screen-reader users hear content for views they are not in.",
+       "wcag": "1.3.1"
+      },
+      {
+       "description": "Interactive elements are marked `aria-hidden=\"true\"` while remaining focusable/actionable, e.g. the Purchases label menu `<div class=\"pM aj0\" tabindex=\"0\" aria-haspopup=\"true\" aria-hidden=\"true\">` and the \"More Add-ons\" `role=\"tab\"`, so focus lands on controls with no announced name or role.",
+       "wcag": "4.1.2"
+      },
+      {
+       "description": "\"inbox settings\" is a bare `<span tabindex=\"0\" class=\"aRq\">` with no role or state, so it is announced as ordinary text even though it is focusable and clickable.",
+       "wcag": "4.1.2"
+      },
+      {
+       "description": "Section headers such as `<h3 class=\"Wr\" role=\"button\">Primary</h3>` override the heading role with button, removing \"Primary\"/\"Promotions\"/\"Social\" from heading-based navigation.",
+       "wcag": "1.3.1"
+      },
+      {
+       "description": "IDs are duplicated across the DOM (`id=\"s\"` twice, `id=\":50\"` twice, `id=\":52\"` twice) and some are used in label/description relationships, making name computation unpredictable.",
+       "wcag": "4.1.1"
+      },
+      {
+       "description": "The promotional banner exposes `<div class=\"sMNisf\" role=\"region\" aria-label=\"\">`, an unnamed region that screen readers announce as an empty landmark.",
+       "wcag": "1.3.1"
+      },
+      {
+       "description": "The search field is a plain `<input type=\"text\" aria-haspopup=\"true\" aria-owns=\"gs_sbt50\" aria-live=\"off\">` with no combobox role or aria-expanded, so autocomplete suggestions and their availability are never announced.",
+       "wcag": "4.1.2"
+      },
+      {
+       "description": "The bypass mechanism `<a href=\"\" class=\"J-Ke\">Skip to content</a>` (and \"Using Gmail with screen readers\") has an empty href, so the skip link may reload the page rather than move focus to the message list.",
+       "wcag": "2.4.1"
+      },
+      {
+       "description": "The inbox category tabs sit inside `<tr role=\"tablist\">` whose children are `<td role=\"heading\" aria-level=\"3\">` wrappers rather than tabs, an invalid ARIA parent/child structure that breaks tab position/count reporting.",
+       "wcag": "1.3.1"
+      },
+      {
+       "description": "The storage meter graphic is exposed as `role=\"img\" aria-label=\"Follow link to manage storage\"`, which describes an action instead of conveying the usage information shown visually.",
+       "wcag": "1.1.1"
+      },
+      {
+       "description": "The Primary tabpanel simultaneously exposes the stale empty-state text \"Your Primary tab is empty.\" alongside three actual conversation rows, giving screen-reader users contradictory information about the inbox.",
+       "wcag": "1.3.1"
+      },
+      {
+       "description": "Left-hand mailbox links other than Inbox are removed from the tab order (`tabindex=\"-1\"` on Starred, Snoozed, Sent, Drafts, Purchases) inside a plain `div` structure with no list/tree roles, so their number and relationship are not conveyed and reaching them depends on undocumented arrow-key behavior.",
+       "wcag": "1.3.1"
+      }
+     ],
+     "low_vision": [
+      {
+       "description": "Row action controls (`ul.bqY` items for archive/snooze/delete) only render on pointer hover over a conversation row and vanish when the pointer leaves, so magnified users cannot keep them visible while panning to them.",
+       "wcag": "1.4.13"
+      },
+      {
+       "description": "Important information is delivered only via native `title` tooltips, e.g. `title=\"Person-to-person conversations and messages that don't appear in other tabs.\"` and the full date `title=\"Mon, Aug 3, 2026, 12:59 AM\"`, which cannot be zoomed, restyled, or kept persistent.",
+       "wcag": "1.4.13"
+      },
+      {
+       "description": "Custom tooltips such as `<div class=\"ne2Ple-oshW8e-J9\" role=\"tooltip\">Upgrade for premium features</div>`, \"Try Gemini\", \"Close banner\" and \"Move to\" appear on hover/focus with no dismiss or hoverable persistence mechanism.",
+       "wcag": "1.4.13"
+      },
+      {
+       "description": "Nearly all toolbar and pagination controls are icon-only sprites drawn on transparent spacer images (`<img class=\"amI T-I-J3\" src=\"images/cleardot.gif\" alt=\"\">` for Newer/Older, `T-KT-JX` for the star), so in high-contrast or images-off modes the controls become invisible with no text fallback.",
+       "wcag": "1.4.11"
+      },
+      {
+       "description": "The interface is a fixed multi-column layout (left navigation `aeN`, message list `col` width groups, right `Side panel` complementary), which forces simultaneous horizontal and vertical scrolling at high magnification.",
+       "wcag": "1.4.10"
+      },
+      {
+       "description": "Message snippets are single-line clipped text (`span.y2` snippet appended after \"-\") that is truncated by available width rather than wrapped, so enlarging text hides more of each message's content.",
+       "wcag": "1.4.4"
+      }
+     ],
+     "dhh": [],
+     "motor": [
+      {
+       "description": "Archive/snooze/delete per-row controls exist only as hover-revealed `li` elements with pointer `jsaction` handlers and no tabindex or keyboard handler, so they require precise hovering and cannot be operated from the keyboard.",
+       "wcag": "2.1.1"
+      },
+      {
+       "description": "Row checkboxes (`div.oZ-jc` in `td.oZ-x3`) and star buttons (`span.aXw` with a 1px cleardot image) are ~20px sprite targets packed tightly against adjacent controls, making accurate pointer activation difficult.",
+       "wcag": "2.5.8"
+      },
+      {
+       "description": "The conversation-opening control `<div class=\"xS\" role=\"link\">` and the setup-tile text `<div class=\"OU\" jsaction=\"click:OhaSLe\">` are clickable but not focusable, so pointer input is the only way to activate them.",
+       "wcag": "2.1.1"
+      },
+      {
+       "description": "Mailbox navigation entries are taken out of the tab sequence (`tabindex=\"-1\"` on Starred, Snoozed, Sent, Drafts, Purchases), so keyboard-only users cannot Tab to them and must rely on undocumented roving-focus keys.",
+       "wcag": "2.1.1"
+      },
+      {
+       "description": "Side-panel tabs (`role=\"tab\"` for Calendar, Keep, Tasks, Contacts, Get Add-ons) carry no tabindex; only the container tablist is focusable, leaving individual apps unreachable by keyboard.",
+       "wcag": "2.1.1"
+      },
+      {
+       "description": "Focus order includes controls in the hidden Trash and Spam panes (e.g. `<span id=\":5r\" role=\"button\" tabindex=\"0\">Empty Trash now</span>` and two extra full copies of the message toolbar), forcing extra keystrokes through invisible, potentially destructive controls.",
+       "wcag": "2.4.3"
+      },
+      {
+       "description": "Custom text-like controls such as `<span role=\"link\" tabindex=\"0\">Details</span>` and `<span tabindex=\"0\" class=\"aRq\">inbox settings</span>` are div/span widgets whose only bound handlers are click/jsaction, so Enter/Space activation is not guaranteed.",
+       "wcag": "2.1.1"
+      }
+     ]
+    },
+    "judged": {
+     "friction_results": [
+      {
+       "gt_friction_index": 0,
+       "surfaced": false,
+       "matched_barrier_indexes": [],
+       "note": "The audit does not mention the temporary Undo toast notification disappearing too quickly."
+      }
+     ],
+     "extra_count": 7,
+     "group": "motor",
+     "judged_at": "2026-08-04T06:48:13.654318+00:00"
+    }
+   }
   },
   {
    "recording_id": "motor - Time sensitive - Gmail - pathway 2",
@@ -950,7 +1517,150 @@
     "verdict": "fail",
     "rationale": "GAM surfaced no frictions for the time-sensitive Gmail Undo toast problem, so the sole ground-truth friction was entirely missed. No repair, report, or motor-access pattern context was produced, leaving the case essentially unaddressed."
    },
-   "ablation": null
+   "ablation": {
+    "case_id": "motor:gmail",
+    "model": "claude-opus-5",
+    "generated_at": "2026-08-04T06:48:09.289596+00:00",
+    "source_capture": "motor - Time sensitive - Gmail - pathway 1/web/page_0001_mail.google.com",
+    "barriers": {
+     "blind": [
+      {
+       "description": "The entire masthead is wrapped in `<h1 class=\"qp\">` so the page's only level-1 heading is announced as a run-on string (\"GmailSearchtabHelpTrainingSend feedback to GoogleUpgrade…Try Gemini\"), giving screen-reader users no meaningful page title landmark.",
+       "wcag": "1.3.1"
+      },
+      {
+       "description": "Per-row action controls are `<li class=\"bqX\">` items inside `<ul role=\"toolbar\">` with no role, accessible name, or tabindex, so the archive/snooze/delete/mark-read actions for each conversation are neither announced nor reachable.",
+       "wcag": "4.1.2"
+      },
+      {
+       "description": "Each conversation's subject/snippet is a `<div class=\"xS\" role=\"link\">` with no href and no tabindex, so the primary \"open this email\" control cannot be focused or activated by keyboard/screen-reader users.",
+       "wcag": "2.1.1"
+      },
+      {
+       "description": "Inside `<table role=\"grid\">` the checkbox and star cells (`td.oZ-x3`, `td.apU`) omit `role=\"gridcell\"`, breaking the grid structure so cell navigation and position reporting are unreliable.",
+       "wcag": "1.3.1"
+      },
+      {
+       "description": "Three simultaneous `role=\"main\"` panes (Inbox, Trash, Spam) each contain a duplicate `<h2>Conversations</h2>` and live text such as \"No conversations in Trash.\", \"Hooray, no spam here!\" and a focusable \"Empty Trash now\" button that are not aria-hidden, so screen-reader users hear content for views they are not in.",
+       "wcag": "1.3.1"
+      },
+      {
+       "description": "Interactive elements are marked `aria-hidden=\"true\"` while remaining focusable/actionable, e.g. the Purchases label menu `<div class=\"pM aj0\" tabindex=\"0\" aria-haspopup=\"true\" aria-hidden=\"true\">` and the \"More Add-ons\" `role=\"tab\"`, so focus lands on controls with no announced name or role.",
+       "wcag": "4.1.2"
+      },
+      {
+       "description": "\"inbox settings\" is a bare `<span tabindex=\"0\" class=\"aRq\">` with no role or state, so it is announced as ordinary text even though it is focusable and clickable.",
+       "wcag": "4.1.2"
+      },
+      {
+       "description": "Section headers such as `<h3 class=\"Wr\" role=\"button\">Primary</h3>` override the heading role with button, removing \"Primary\"/\"Promotions\"/\"Social\" from heading-based navigation.",
+       "wcag": "1.3.1"
+      },
+      {
+       "description": "IDs are duplicated across the DOM (`id=\"s\"` twice, `id=\":50\"` twice, `id=\":52\"` twice) and some are used in label/description relationships, making name computation unpredictable.",
+       "wcag": "4.1.1"
+      },
+      {
+       "description": "The promotional banner exposes `<div class=\"sMNisf\" role=\"region\" aria-label=\"\">`, an unnamed region that screen readers announce as an empty landmark.",
+       "wcag": "1.3.1"
+      },
+      {
+       "description": "The search field is a plain `<input type=\"text\" aria-haspopup=\"true\" aria-owns=\"gs_sbt50\" aria-live=\"off\">` with no combobox role or aria-expanded, so autocomplete suggestions and their availability are never announced.",
+       "wcag": "4.1.2"
+      },
+      {
+       "description": "The bypass mechanism `<a href=\"\" class=\"J-Ke\">Skip to content</a>` (and \"Using Gmail with screen readers\") has an empty href, so the skip link may reload the page rather than move focus to the message list.",
+       "wcag": "2.4.1"
+      },
+      {
+       "description": "The inbox category tabs sit inside `<tr role=\"tablist\">` whose children are `<td role=\"heading\" aria-level=\"3\">` wrappers rather than tabs, an invalid ARIA parent/child structure that breaks tab position/count reporting.",
+       "wcag": "1.3.1"
+      },
+      {
+       "description": "The storage meter graphic is exposed as `role=\"img\" aria-label=\"Follow link to manage storage\"`, which describes an action instead of conveying the usage information shown visually.",
+       "wcag": "1.1.1"
+      },
+      {
+       "description": "The Primary tabpanel simultaneously exposes the stale empty-state text \"Your Primary tab is empty.\" alongside three actual conversation rows, giving screen-reader users contradictory information about the inbox.",
+       "wcag": "1.3.1"
+      },
+      {
+       "description": "Left-hand mailbox links other than Inbox are removed from the tab order (`tabindex=\"-1\"` on Starred, Snoozed, Sent, Drafts, Purchases) inside a plain `div` structure with no list/tree roles, so their number and relationship are not conveyed and reaching them depends on undocumented arrow-key behavior.",
+       "wcag": "1.3.1"
+      }
+     ],
+     "low_vision": [
+      {
+       "description": "Row action controls (`ul.bqY` items for archive/snooze/delete) only render on pointer hover over a conversation row and vanish when the pointer leaves, so magnified users cannot keep them visible while panning to them.",
+       "wcag": "1.4.13"
+      },
+      {
+       "description": "Important information is delivered only via native `title` tooltips, e.g. `title=\"Person-to-person conversations and messages that don't appear in other tabs.\"` and the full date `title=\"Mon, Aug 3, 2026, 12:59 AM\"`, which cannot be zoomed, restyled, or kept persistent.",
+       "wcag": "1.4.13"
+      },
+      {
+       "description": "Custom tooltips such as `<div class=\"ne2Ple-oshW8e-J9\" role=\"tooltip\">Upgrade for premium features</div>`, \"Try Gemini\", \"Close banner\" and \"Move to\" appear on hover/focus with no dismiss or hoverable persistence mechanism.",
+       "wcag": "1.4.13"
+      },
+      {
+       "description": "Nearly all toolbar and pagination controls are icon-only sprites drawn on transparent spacer images (`<img class=\"amI T-I-J3\" src=\"images/cleardot.gif\" alt=\"\">` for Newer/Older, `T-KT-JX` for the star), so in high-contrast or images-off modes the controls become invisible with no text fallback.",
+       "wcag": "1.4.11"
+      },
+      {
+       "description": "The interface is a fixed multi-column layout (left navigation `aeN`, message list `col` width groups, right `Side panel` complementary), which forces simultaneous horizontal and vertical scrolling at high magnification.",
+       "wcag": "1.4.10"
+      },
+      {
+       "description": "Message snippets are single-line clipped text (`span.y2` snippet appended after \"-\") that is truncated by available width rather than wrapped, so enlarging text hides more of each message's content.",
+       "wcag": "1.4.4"
+      }
+     ],
+     "dhh": [],
+     "motor": [
+      {
+       "description": "Archive/snooze/delete per-row controls exist only as hover-revealed `li` elements with pointer `jsaction` handlers and no tabindex or keyboard handler, so they require precise hovering and cannot be operated from the keyboard.",
+       "wcag": "2.1.1"
+      },
+      {
+       "description": "Row checkboxes (`div.oZ-jc` in `td.oZ-x3`) and star buttons (`span.aXw` with a 1px cleardot image) are ~20px sprite targets packed tightly against adjacent controls, making accurate pointer activation difficult.",
+       "wcag": "2.5.8"
+      },
+      {
+       "description": "The conversation-opening control `<div class=\"xS\" role=\"link\">` and the setup-tile text `<div class=\"OU\" jsaction=\"click:OhaSLe\">` are clickable but not focusable, so pointer input is the only way to activate them.",
+       "wcag": "2.1.1"
+      },
+      {
+       "description": "Mailbox navigation entries are taken out of the tab sequence (`tabindex=\"-1\"` on Starred, Snoozed, Sent, Drafts, Purchases), so keyboard-only users cannot Tab to them and must rely on undocumented roving-focus keys.",
+       "wcag": "2.1.1"
+      },
+      {
+       "description": "Side-panel tabs (`role=\"tab\"` for Calendar, Keep, Tasks, Contacts, Get Add-ons) carry no tabindex; only the container tablist is focusable, leaving individual apps unreachable by keyboard.",
+       "wcag": "2.1.1"
+      },
+      {
+       "description": "Focus order includes controls in the hidden Trash and Spam panes (e.g. `<span id=\":5r\" role=\"button\" tabindex=\"0\">Empty Trash now</span>` and two extra full copies of the message toolbar), forcing extra keystrokes through invisible, potentially destructive controls.",
+       "wcag": "2.4.3"
+      },
+      {
+       "description": "Custom text-like controls such as `<span role=\"link\" tabindex=\"0\">Details</span>` and `<span tabindex=\"0\" class=\"aRq\">inbox settings</span>` are div/span widgets whose only bound handlers are click/jsaction, so Enter/Space activation is not guaranteed.",
+       "wcag": "2.1.1"
+      }
+     ]
+    },
+    "judged": {
+     "friction_results": [
+      {
+       "gt_friction_index": 0,
+       "surfaced": false,
+       "matched_barrier_indexes": [],
+       "note": "The audit does not mention the temporary Undo toast notification disappearing too quickly."
+      }
+     ],
+     "extra_count": 7,
+     "group": "motor",
+     "judged_at": "2026-08-04T06:48:13.654318+00:00"
+    }
+   }
   },
   {
    "recording_id": "motor - Unintended activation - ASOS - pathway 1",
@@ -1019,7 +1729,126 @@
     "verdict": "fail",
     "rationale": "The ground-truth friction about the CLEAR ALL/VIEW ITEMS mis-click hazard was not surfaced at all (frictions list is empty). No repair or recommendation was generated, and no report finding addresses the issue, so the case fails."
    },
-   "ablation": null
+   "ablation": {
+    "case_id": "motor:asos",
+    "model": "claude-opus-5",
+    "generated_at": "2026-08-04T06:49:51.701695+00:00",
+    "source_capture": "motor - Unintended activation - ASOS - pathway 1/web/page_0002_www.asos.com",
+    "barriers": {
+     "blind": [
+      {
+       "description": "The product grid failed to render and the only recovery affordance is a `role=\"alert\"` div reading \"Oops! Sorry, this page is unavailable right now. Tap this message to retry.\" which is not a button or link, so screen-reader users cannot trigger a retry and are left with an empty main region.",
+       "wcag": "4.1.2"
+      },
+      {
+       "description": "The entire primary category mega-menu is unavailable to assistive technology – the first `<nav aria-label=\"Men's products\">` is `aria-hidden=\"true\"` and every `role=\"tabpanel\"` also carries `aria-hidden=\"true\"`, so no category navigation landmark appears in the accessibility tree.",
+       "wcag": "1.3.1"
+      },
+      {
+       "description": "The aria-hidden navigation still contains hundreds of focusable `<a>` links, so screen-reader/keyboard users tab into controls that are not exposed in the accessibility tree, producing silent focus stops.",
+       "wcag": "4.1.2"
+      },
+      {
+       "description": "Two different navigation regions carry the identical `aria-label=\"Men's products\"` (one of them actually holds the women's floor links), so landmark navigation lists misleading, duplicated destinations.",
+       "wcag": "2.4.6"
+      },
+      {
+       "description": "The mega-menu tab pattern is broken: `role=\"tablist\"` has `tabindex=\"-1\"` and every `role=\"tab\"` reports `aria-selected=\"false\"`, so no tab state is ever conveyed and arrow-key tab semantics do not work as announced.",
+       "wcag": "4.1.2"
+      },
+      {
+       "description": "\"Sign In\" and \"Join\" are `<button role=\"link\">` elements, so they are announced as links while behaving as buttons, misrepresenting the control to screen-reader users.",
+       "wcag": "4.1.2"
+      },
+      {
+       "description": "The geo-location welcome mat wraps a whole region (message plus \"Deliver to United States\"/\"Deliver elsewhere\" buttons) in `role=\"alert\" aria-live=\"assertive\"`, so the entire block including button labels is read out interruptively without focus being moved to it.",
+       "wcag": "4.1.3"
+      },
+      {
+       "description": "The main content has no heading at all (no h1 in `main`, whose accessible name is empty), leaving screen-reader users without any structural orientation for the \"New In\" listing.",
+       "wcag": "1.3.1"
+      },
+      {
+       "description": "Navigation image links such as `<img alt=\"Navigation Link\">` in the Credit Card panel give the link an accessible name of \"Navigation Link\", which does not describe its destination.",
+       "wcag": "2.4.4"
+      },
+      {
+       "description": "The decorative padlock beside \"New In: Today\" uses `alt=\"Lock icon\"`, injecting a meaningless word into the link name instead of being marked decorative or explained.",
+       "wcag": "1.1.1"
+      },
+      {
+       "description": "The search field is marked with `aria-haspopup=\"listbox\"` and `aria-autocomplete=\"list\"` but has no combobox role or `aria-controls`/`aria-expanded` linkage to the separate `aria-live` suggestion container, so suggestions are not reliably announced or navigable.",
+       "wcag": "4.1.2"
+      },
+      {
+       "description": "Pagination exposes bare links \"Page 2\" through \"Page 21\" with no `aria-current` or announcement of the current page/result count, so screen-reader users cannot tell where they are in the listing.",
+       "wcag": "1.3.1"
+      }
+     ],
+     "low_vision": [
+      {
+       "description": "Multiple stacked overlays – the sticky header (`#chrome-sticky-header` headroom wrapper), the app-install promo bar with \"View in App\"/\"Get App\"/Close, and the geo welcome-mat region – consume a large share of the viewport and can obscure or push away the listing content at high magnification.",
+       "wcag": "1.4.10"
+      },
+      {
+       "description": "Because the header is position-sticky, focused controls scrolled under it can be visually hidden from magnified users with no scroll-padding compensation.",
+       "wcag": "2.4.11"
+      },
+      {
+       "description": "Navigation CTA labels (e.g. \"Style Your Moment\", \"Out of office looks\", \"Summer Accessories\") are white text placed over photographic `<img alt=\"\">` tiles with only a gradient div behind them, so text contrast depends on the underlying image and can fall below 4.5:1.",
+       "wcag": "1.4.3"
+      },
+      {
+       "description": "Key header controls (My Account, Saved Items, Bag) are icon-only glyph spans with no visible text label, so magnified users must interpret tiny pictograms rather than readable text.",
+       "wcag": "1.4.5"
+      },
+      {
+       "description": "Category tiles in the mega-menu render their imagery as CSS background images on `role=\"presentation\"` divs, so in high-contrast or images-off modes the tiles collapse to bare text with no visual affordance.",
+       "wcag": "1.4.11"
+      },
+      {
+       "description": "The page's only status feedback is a small dismissible error toast (\"Oops! … × \") in the main area; at high zoom this transient, off-centre message is easily missed, leaving the empty product grid unexplained.",
+       "wcag": "1.4.13"
+      }
+     ],
+     "dhh": [],
+     "motor": [
+      {
+       "description": "The retry action for the failed listing is a non-focusable `role=\"alert\"` div requiring a pointer tap (\"Tap this message to retry\"), giving keyboard-only or switch users no way to activate it.",
+       "wcag": "2.1.1"
+      },
+      {
+       "description": "Mega-menu panels (`role=\"tabpanel\"`, `aria-hidden=\"true\"`) are revealed from small tab triggers and must be traversed with the pointer without any persistence or dismiss control, so a pointer slip collapses the menu and loses the target.",
+       "wcag": "1.4.13"
+      },
+      {
+       "description": "The toast's \"×\" close control and the icon-only header buttons (account, saved items, bag) are small, tightly packed targets in a single row, making accurate pointer activation difficult.",
+       "wcag": "2.5.8"
+      },
+      {
+       "description": "Pagination is a run of 20 closely spaced numeric links (\"Page 2\"…\"Page 21\") with minimal spacing, requiring fine pointer accuracy to select the right page.",
+       "wcag": "2.5.8"
+      },
+      {
+       "description": "The duplicated, aria-hidden women's navigation keeps all of its links in the tab order, forcing keyboard users to traverse hundreds of invisible tab stops before reaching the product listing.",
+       "wcag": "2.4.3"
+      }
+     ]
+    },
+    "judged": {
+     "friction_results": [
+      {
+       "gt_friction_index": 0,
+       "surfaced": false,
+       "matched_barrier_indexes": [],
+       "note": "The issue regarding 'CLEAR ALL' sitting adjacent to 'VIEW ITEMS' in the filter panel was not identified in any of the audit barriers."
+      }
+     ],
+     "extra_count": 5,
+     "group": "motor",
+     "judged_at": "2026-08-04T06:49:55.571424+00:00"
+    }
+   }
   },
   {
    "recording_id": "motor - Unintended activation - ASOS - pathway 2",
@@ -1114,7 +1943,126 @@
     "verdict": "fail",
     "rationale": "The session did not surface the ground-truth friction of accidental CLEAR ALL activation with no undo; it reported a different filter-drawer issue. Consequently the repair and report do not address the expected destructive-action guard, so the case is not covered."
    },
-   "ablation": null
+   "ablation": {
+    "case_id": "motor:asos",
+    "model": "claude-opus-5",
+    "generated_at": "2026-08-04T06:49:51.701695+00:00",
+    "source_capture": "motor - Unintended activation - ASOS - pathway 1/web/page_0002_www.asos.com",
+    "barriers": {
+     "blind": [
+      {
+       "description": "The product grid failed to render and the only recovery affordance is a `role=\"alert\"` div reading \"Oops! Sorry, this page is unavailable right now. Tap this message to retry.\" which is not a button or link, so screen-reader users cannot trigger a retry and are left with an empty main region.",
+       "wcag": "4.1.2"
+      },
+      {
+       "description": "The entire primary category mega-menu is unavailable to assistive technology – the first `<nav aria-label=\"Men's products\">` is `aria-hidden=\"true\"` and every `role=\"tabpanel\"` also carries `aria-hidden=\"true\"`, so no category navigation landmark appears in the accessibility tree.",
+       "wcag": "1.3.1"
+      },
+      {
+       "description": "The aria-hidden navigation still contains hundreds of focusable `<a>` links, so screen-reader/keyboard users tab into controls that are not exposed in the accessibility tree, producing silent focus stops.",
+       "wcag": "4.1.2"
+      },
+      {
+       "description": "Two different navigation regions carry the identical `aria-label=\"Men's products\"` (one of them actually holds the women's floor links), so landmark navigation lists misleading, duplicated destinations.",
+       "wcag": "2.4.6"
+      },
+      {
+       "description": "The mega-menu tab pattern is broken: `role=\"tablist\"` has `tabindex=\"-1\"` and every `role=\"tab\"` reports `aria-selected=\"false\"`, so no tab state is ever conveyed and arrow-key tab semantics do not work as announced.",
+       "wcag": "4.1.2"
+      },
+      {
+       "description": "\"Sign In\" and \"Join\" are `<button role=\"link\">` elements, so they are announced as links while behaving as buttons, misrepresenting the control to screen-reader users.",
+       "wcag": "4.1.2"
+      },
+      {
+       "description": "The geo-location welcome mat wraps a whole region (message plus \"Deliver to United States\"/\"Deliver elsewhere\" buttons) in `role=\"alert\" aria-live=\"assertive\"`, so the entire block including button labels is read out interruptively without focus being moved to it.",
+       "wcag": "4.1.3"
+      },
+      {
+       "description": "The main content has no heading at all (no h1 in `main`, whose accessible name is empty), leaving screen-reader users without any structural orientation for the \"New In\" listing.",
+       "wcag": "1.3.1"
+      },
+      {
+       "description": "Navigation image links such as `<img alt=\"Navigation Link\">` in the Credit Card panel give the link an accessible name of \"Navigation Link\", which does not describe its destination.",
+       "wcag": "2.4.4"
+      },
+      {
+       "description": "The decorative padlock beside \"New In: Today\" uses `alt=\"Lock icon\"`, injecting a meaningless word into the link name instead of being marked decorative or explained.",
+       "wcag": "1.1.1"
+      },
+      {
+       "description": "The search field is marked with `aria-haspopup=\"listbox\"` and `aria-autocomplete=\"list\"` but has no combobox role or `aria-controls`/`aria-expanded` linkage to the separate `aria-live` suggestion container, so suggestions are not reliably announced or navigable.",
+       "wcag": "4.1.2"
+      },
+      {
+       "description": "Pagination exposes bare links \"Page 2\" through \"Page 21\" with no `aria-current` or announcement of the current page/result count, so screen-reader users cannot tell where they are in the listing.",
+       "wcag": "1.3.1"
+      }
+     ],
+     "low_vision": [
+      {
+       "description": "Multiple stacked overlays – the sticky header (`#chrome-sticky-header` headroom wrapper), the app-install promo bar with \"View in App\"/\"Get App\"/Close, and the geo welcome-mat region – consume a large share of the viewport and can obscure or push away the listing content at high magnification.",
+       "wcag": "1.4.10"
+      },
+      {
+       "description": "Because the header is position-sticky, focused controls scrolled under it can be visually hidden from magnified users with no scroll-padding compensation.",
+       "wcag": "2.4.11"
+      },
+      {
+       "description": "Navigation CTA labels (e.g. \"Style Your Moment\", \"Out of office looks\", \"Summer Accessories\") are white text placed over photographic `<img alt=\"\">` tiles with only a gradient div behind them, so text contrast depends on the underlying image and can fall below 4.5:1.",
+       "wcag": "1.4.3"
+      },
+      {
+       "description": "Key header controls (My Account, Saved Items, Bag) are icon-only glyph spans with no visible text label, so magnified users must interpret tiny pictograms rather than readable text.",
+       "wcag": "1.4.5"
+      },
+      {
+       "description": "Category tiles in the mega-menu render their imagery as CSS background images on `role=\"presentation\"` divs, so in high-contrast or images-off modes the tiles collapse to bare text with no visual affordance.",
+       "wcag": "1.4.11"
+      },
+      {
+       "description": "The page's only status feedback is a small dismissible error toast (\"Oops! … × \") in the main area; at high zoom this transient, off-centre message is easily missed, leaving the empty product grid unexplained.",
+       "wcag": "1.4.13"
+      }
+     ],
+     "dhh": [],
+     "motor": [
+      {
+       "description": "The retry action for the failed listing is a non-focusable `role=\"alert\"` div requiring a pointer tap (\"Tap this message to retry\"), giving keyboard-only or switch users no way to activate it.",
+       "wcag": "2.1.1"
+      },
+      {
+       "description": "Mega-menu panels (`role=\"tabpanel\"`, `aria-hidden=\"true\"`) are revealed from small tab triggers and must be traversed with the pointer without any persistence or dismiss control, so a pointer slip collapses the menu and loses the target.",
+       "wcag": "1.4.13"
+      },
+      {
+       "description": "The toast's \"×\" close control and the icon-only header buttons (account, saved items, bag) are small, tightly packed targets in a single row, making accurate pointer activation difficult.",
+       "wcag": "2.5.8"
+      },
+      {
+       "description": "Pagination is a run of 20 closely spaced numeric links (\"Page 2\"…\"Page 21\") with minimal spacing, requiring fine pointer accuracy to select the right page.",
+       "wcag": "2.5.8"
+      },
+      {
+       "description": "The duplicated, aria-hidden women's navigation keeps all of its links in the tab order, forcing keyboard users to traverse hundreds of invisible tab stops before reaching the product listing.",
+       "wcag": "2.4.3"
+      }
+     ]
+    },
+    "judged": {
+     "friction_results": [
+      {
+       "gt_friction_index": 0,
+       "surfaced": false,
+       "matched_barrier_indexes": [],
+       "note": "The issue regarding 'CLEAR ALL' sitting adjacent to 'VIEW ITEMS' in the filter panel was not identified in any of the audit barriers."
+      }
+     ],
+     "extra_count": 5,
+     "group": "motor",
+     "judged_at": "2026-08-04T06:49:55.571424+00:00"
+    }
+   }
   },
   {
    "recording_id": "dhh - No visual alternative - iMessage - pathway 3",
