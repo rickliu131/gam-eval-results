@@ -8,7 +8,7 @@
   :root { --ok:#0a7d33; --bad:#b3261e; --mid:#9a6700; --line:#d9dde4; --dim:#5d6470; --bg:#f5f6f8; }
   * { box-sizing:border-box; }
   body { margin:0; font:14px/1.5 -apple-system,"Segoe UI",sans-serif; color:#191d24; background:var(--bg); }
-  header { background:#fff; border-bottom:1px solid var(--line); padding:14px 24px; position:sticky; top:0; z-index:9; }
+  header { background:#fff; border-bottom:1px solid var(--line); padding:14px 24px; }
   header .bar { display:flex; gap:14px; align-items:center; flex-wrap:wrap; }
   header h1 { font-size:17px; margin:0; }
   select { font:inherit; padding:4px 8px; }
@@ -63,6 +63,7 @@
     <h1>GAM Evaluation Results</h1>
     <label>Round: <select id="round"></select></label>
     <span id="meta" class="meta"></span>
+    <span id="groupfilter" class="meta" style="margin-left:12px"></span>
   </div>
   <div class="stats" id="stats"></div>
   <div class="groupstats" id="groupstats"></div>
@@ -242,7 +243,7 @@ function itemHtml(it) {
     triTxt("interaction patterns", j.pattern_ok),
     chip(`extras: ${extras}`, extras ? "mid" : ""),
   ].join(" ");
-  return `<details class="item ${untested ? "untested" : ""}" ${j && j.verdict !== "pass" ? "open" : ""}>
+  return `<details class="item ${untested ? "untested" : ""}">
     <summary><span class="ttl">${esc(it.example_name)} — pathway ${esc(it.pathway ?? "?")}</span>
       <span class="rid">${esc(it.case_id)} · ${esc(it.recording_id)}</span>
       <div class="strip">${strip}</div></summary>
@@ -268,10 +269,18 @@ async function loadRound(file) {
   const GROUP_ORDER = ["blind", "low_vision", "dhh", "motor"];
   const orderedGroups = GROUP_ORDER.filter(g => groups[g]).map(g => [g, groups[g]])
     .concat(Object.entries(groups).filter(([g]) => !GROUP_ORDER.includes(g)));
+  // Group filter: multi-select checkboxes; unchecked groups are hidden.
+  const gf = document.getElementById("groupfilter");
+  gf.innerHTML = "show: " + orderedGroups.map(([g]) =>
+    `<label style="margin-right:10px"><input type="checkbox" data-g="${esc(g)}" checked> ${esc(g.replace("_"," "))}</label>`).join("");
+  gf.querySelectorAll("input").forEach(cb => cb.onchange = () => {
+    document.querySelectorAll(`[data-groupsec="${cb.dataset.g}"]`).forEach(el =>
+      el.style.display = cb.checked ? "" : "none");
+  });
   document.getElementById("main").innerHTML = orderedGroups.map(([g, cats]) =>
-    `<h2 class="group">${esc(g.replace("_"," "))}</h2>` +
+    `<div data-groupsec="${esc(g)}"><h2 class="group">${esc(g.replace("_"," "))}</h2>` +
     Object.entries(cats).map(([cat, items]) =>
-      `<h3 class="cat">${esc(cat)}</h3>` + items.map(itemHtml).join("")).join("")
+      `<h3 class="cat">${esc(cat)}</h3>` + items.map(itemHtml).join("")).join("") + `</div>`
   ).join("");
 }
 
