@@ -88,7 +88,7 @@ const METRICS = [
 ];
 const RAW_METRICS = new Set(["extra_frictions_per_case"]);
 
-function stats(m, abl) {
+function stats(m, abl, latency) {
   const o = (m || {}).overall || {};
   document.getElementById("stats").innerHTML = METRICS.map(([k, label]) => {
     const v = o[k];
@@ -111,8 +111,12 @@ function stats(m, abl) {
   const ablNote = a.overall
     ? `<div class="meta" style="margin-top:6px">LLM-only baseline = static page audit (Opus 5, page HTML + accessibility tree + standards; no interaction data), counted per recording on the same ${a.overall.recordings_counted ?? "?"} tested recordings as GAM: a case-level audit verdict applies to every recording of that case; non-web / uncaptured cases count as 0 surfaced. ${a.overall.barriers_per_case ?? "?"} barriers listed per recording; ${a.overall.recordings_audited ?? "?"} of ${a.overall.recordings_counted ?? "?"} recordings covered by an audit.</div>`
     : "";
-  document.getElementById("groupstats").innerHTML = (gamRows || ablOverall)
-    ? `<table><tr><th></th>${METRICS.map(([,l])=>`<th>${esc(l)}</th>`).join("")}</tr>${gamRows}${ablOverall}${ablRows}</table>${ablNote}` : "";
+  const latNote = latency && Object.keys(latency).length
+    ? `<div class="meta" style="margin-top:6px">Request latency (this round):${Object.entries(latency).map(([k, r]) =>
+        `<br>${esc(r.model || k)} — n=${esc(r.count)}, mean ${esc(r.mean_s)}s, p50 ${esc(r.p50_s)}s, p95 ${esc(r.p95_s)}s, max ${esc(r.max_s)}s`).join("")}</div>`
+    : "";
+  document.getElementById("groupstats").innerHTML = ((gamRows || ablOverall)
+    ? `<table><tr><th></th>${METRICS.map(([,l])=>`<th>${esc(l)}</th>`).join("")}</tr>${gamRows}${ablOverall}${ablRows}</table>${ablNote}` : "") + latNote;
 }
 
 function comparisonNotes(notes) {
@@ -254,7 +258,7 @@ function itemHtml(it) {
 
 async function loadRound(file) {
   const data = await (await fetch("data/" + file + "?v=" + Date.now(), {cache: "no-store"})).json();
-  stats(data.metrics, data.ablation_metrics);
+  stats(data.metrics, data.ablation_metrics, data.latency);
   comparisonNotes(data.comparison_notes);
   const tested = data.items.filter(i => (i.session || {}).status !== "no_recording").length;
   const unrecorded = data.items.length - tested;
