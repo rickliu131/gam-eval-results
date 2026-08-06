@@ -1,16 +1,10 @@
 {
  "rounds": [
   {
-   "round": "r20m-motor-gain4",
-   "file": "r20m-motor-gain4.json",
-   "generated_at": "2026-08-06T07:57:21.755637+00:00",
-   "items": 44
-  },
-  {
-   "round": "r19m-motor-amplified",
-   "file": "r19m-motor-amplified.json",
-   "generated_at": "2026-08-06T06:47:40.548024+00:00",
-   "items": 44
+   "round": "r23-comprehensive-final",
+   "file": "r23-comprehensive-final.json",
+   "generated_at": "2026-08-06T15:26:00.075185+00:00",
+   "items": 67
   },
   {
    "round": "r18-study-final",
@@ -29,6 +23,18 @@
    "file": "r14-study-stability.json",
    "generated_at": "2026-08-06T02:55:52.449766+00:00",
    "items": 48
+  },
+  {
+   "round": "r19m-motor-amplified",
+   "file": "r19m-motor-amplified.json",
+   "generated_at": "2026-08-06T06:47:40.548024+00:00",
+   "items": 44
+  },
+  {
+   "round": "r20m-motor-gain4",
+   "file": "r20m-motor-gain4.json",
+   "generated_at": "2026-08-06T07:57:21.755637+00:00",
+   "items": 44
   },
   {
    "round": "r17m-motor-pace",
