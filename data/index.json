@@ -1,6 +1,12 @@
 {
  "rounds": [
   {
+   "round": "r19m-motor-amplified",
+   "file": "r19m-motor-amplified.json",
+   "generated_at": "2026-08-06T06:47:40.548024+00:00",
+   "items": 44
+  },
+  {
    "round": "r18-study-final",
    "file": "r18-study-final.json",
    "generated_at": "2026-08-06T03:59:38.150836+00:00",

@@ -65,6 +65,7 @@
     <span id="meta" class="meta"></span>
     <span id="groupfilter" class="meta" style="margin-left:12px"></span>
   </div>
+  <div id="runconfig" class="meta"></div>
   <div class="stats" id="stats"></div>
   <div class="groupstats" id="groupstats"></div>
   <div id="compnotes"></div>
@@ -76,6 +77,38 @@ const pct = v => (v === null || v === undefined) ? "—" : (v*100).toFixed(1) + 
 const chip = (t, cls="") => `<span class="chip ${cls}">${esc(t)}</span>`;
 const tri = v => v === true ? "ok" : v === false ? "no" : "na";
 const triTxt = (label, v) => chip(`${label}: ${v === true ? "yes" : v === false ? "no" : "n/a"}`, tri(v));
+
+// Run-config provenance (round header + per item). Absent (older rounds /
+// sessions) renders nothing — same graceful behavior as the latency block.
+const RC_CHANNELS = [
+  ["include_video_original", "video"],
+  ["include_video_clean", "video-clean"],
+  ["include_keyboard", "keyboard"],
+  ["include_cursor", "cursor"],
+  ["include_cursor_overlay", "cursor-overlay"],
+  ["include_ui_context", "ui"],
+  ["include_at_context", "at"],
+  ["include_web_dom", "web-dom"],
+  ["include_web_a11y_tree", "a11y-tree"],
+];
+function runConfigText(rc) {
+  if (!rc || typeof rc !== "object" || !Object.keys(rc).length) return "";
+  const parts = [];
+  if (rc.model) parts.push("model: " + rc.model +
+    (rc.provider && rc.provider !== "gemini" ? " (" + rc.provider + ")" : ""));
+  if (rc.temperature !== undefined && rc.temperature !== null) parts.push("temp " + rc.temperature);
+  if (rc.thinking_level) parts.push("thinking " + rc.thinking_level);
+  if (rc.video_fps !== undefined && rc.video_fps !== null) parts.push("fps " + rc.video_fps);
+  if (rc.media_resolution && rc.media_resolution !== "default") parts.push("res " + rc.media_resolution);
+  const ch = rc.channels || {};
+  const textOff = rc.cursor_text_suppressed === true;
+  const on = RC_CHANNELS.filter(([k]) => ch[k])
+    .filter(([k]) => !(textOff && k === "include_cursor"))
+    .map(([k, label]) => k === "include_cursor_overlay" && textOff
+      ? "cursor-overlay(text off)" : label);
+  if (on.length) parts.push("channels: " + on.join(", "));
+  return parts.join(" · ");
+}
 
 const METRICS = [
   ["friction_recall","friction recall"],
@@ -247,10 +280,12 @@ function itemHtml(it) {
     triTxt("interaction patterns", j.pattern_ok),
     chip(`extras: ${extras}`, extras ? "mid" : ""),
   ].join(" ");
+  const rcLine = runConfigText(it.run_config);
   return `<details class="item ${untested ? "untested" : ""}">
     <summary><span class="ttl">${esc(it.example_name)} — pathway ${esc(it.pathway ?? "?")}</span>
       <span class="rid">${esc(it.case_id)} · ${esc(it.recording_id)}</span>
-      <div class="strip">${strip}</div></summary>
+      <div class="strip">${strip}</div>
+      ${rcLine ? `<div class="meta" style="margin-top:4px">${esc(rcLine)}</div>` : ""}</summary>
     ${frictionGrid(it)}
     <div class="cols">${gtColumn(it)}${gamColumn(it)}${ablColumn(it)}</div>
   </details>`;
@@ -258,6 +293,9 @@ function itemHtml(it) {
 
 async function loadRound(file) {
   const data = await (await fetch("data/" + file + "?v=" + Date.now(), {cache: "no-store"})).json();
+  const rcHeader = runConfigText(data.run_config);
+  document.getElementById("runconfig").innerHTML =
+    rcHeader ? `<span style="display:inline-block;margin-top:6px">${esc(rcHeader)}</span>` : "";
   stats(data.metrics, data.ablation_metrics, data.latency);
   comparisonNotes(data.comparison_notes);
   const tested = data.items.filter(i => (i.session || {}).status !== "no_recording").length;
