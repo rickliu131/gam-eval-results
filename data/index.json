@@ -1,10 +1,34 @@
 {
  "rounds": [
   {
+   "round": "r14-study-stability",
+   "file": "r14-study-stability.json",
+   "generated_at": "2026-08-06T02:55:52.449766+00:00",
+   "items": 48
+  },
+  {
    "round": "r13-study-baseline",
    "file": "r13-study-baseline.json",
    "generated_at": "2026-08-05T19:21:10.522832+00:00",
    "items": 47
+  },
+  {
+   "round": "r17m-motor-pace",
+   "file": "r17m-motor-pace.json",
+   "generated_at": "2026-08-06T02:55:52.386249+00:00",
+   "items": 44
+  },
+  {
+   "round": "r16m-motor-overlay",
+   "file": "r16m-motor-overlay.json",
+   "generated_at": "2026-08-06T02:55:52.351188+00:00",
+   "items": 44
+  },
+  {
+   "round": "r15m-motor-baseline",
+   "file": "r15m-motor-baseline.json",
+   "generated_at": "2026-08-06T02:55:52.316188+00:00",
+   "items": 44
   },
   {
    "round": "r12-merged-final",
