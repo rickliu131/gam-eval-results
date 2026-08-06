@@ -1,6 +1,12 @@
 {
  "rounds": [
   {
+   "round": "r18-study-final",
+   "file": "r18-study-final.json",
+   "generated_at": "2026-08-06T03:59:38.150836+00:00",
+   "items": 46
+  },
+  {
    "round": "r13-study-baseline",
    "file": "r13-study-baseline.json",
    "generated_at": "2026-08-05T19:21:10.522832+00:00",
