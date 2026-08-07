@@ -101,11 +101,22 @@ function runConfigText(rc) {
   if (rc.video_fps !== undefined && rc.video_fps !== null) parts.push("fps " + rc.video_fps);
   if (rc.media_resolution && rc.media_resolution !== "default") parts.push("res " + rc.media_resolution);
   const ch = rc.channels || {};
+  // Dynamic video-channel rule (2026-08-07): the clean channel became the
+  // per-segment unzoomed_view clip (sent only under screen magnification) and
+  // the cursor overlay became the always-on cursor render. Older rounds
+  // without unzoomed_rule keep the original static labels.
+  const dynRule = ch.unzoomed_rule === "magnification-only";
   const textOff = rc.cursor_text_suppressed === true;
   const on = RC_CHANNELS.filter(([k]) => ch[k])
     .filter(([k]) => !(textOff && k === "include_cursor"))
-    .map(([k, label]) => k === "include_cursor_overlay" && textOff
-      ? "cursor-overlay(text off)" : label);
+    .map(([k, label]) => {
+      if (k === "include_video_clean" && dynRule) return "unzoomed(zoom-only)";
+      if (k === "include_cursor_overlay") {
+        const base = dynRule ? "cursor-render" : "cursor-overlay";
+        return textOff ? base + "(text off)" : base;
+      }
+      return label;
+    });
   if (on.length) parts.push("channels: " + on.join(", "));
   return parts.join(" · ");
 }
